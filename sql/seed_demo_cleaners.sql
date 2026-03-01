@@ -1,1135 +1,424 @@
 -- ============================================================
 -- seed_demo_cleaners.sql
--- Demo cleaner data: 1 admin + 50 cleaners with users,
--- category assignments, and specialties
+-- 1 admin + 60 cleaning businesses across 20 categories
+-- States: FL(10), CA(5), TX(44), NY(33), IL(14), GA(11),
+--         AZ(3), CO(6), WA(48), NV(29), NC(34), NJ(31)
 -- ============================================================
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+-- Clear existing data
+TRUNCATE TABLE `cleaner_specialties`;
+TRUNCATE TABLE `cleaner_categories`;
+TRUNCATE TABLE `cleaner_discounts`;
+TRUNCATE TABLE `cleaner_service_areas`;
+TRUNCATE TABLE `cleaner_photos`;
+TRUNCATE TABLE `reviews`;
+TRUNCATE TABLE `lead_assignments`;
+TRUNCATE TABLE `leads`;
+TRUNCATE TABLE `sponsored_listings`;
+TRUNCATE TABLE `payments`;
+TRUNCATE TABLE `cleaners`;
+DELETE FROM `users`;
+ALTER TABLE `users` AUTO_INCREMENT = 1;
+ALTER TABLE `cleaners` AUTO_INCREMENT = 1;
+
 -- ============================================================
--- ADMIN USER
+-- ADMIN USER (ID=1)
 -- ============================================================
 INSERT INTO `users` (`email`, `password`, `role`, `first_name`, `last_name`, `phone`, `email_verified`, `status`) VALUES
 ('admin@cleaners-247.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'Admin', 'User', '305-555-0100', 1, 'active');
 
 -- ============================================================
--- CLEANER USERS (50 users with role 'cleaner')
+-- CLEANER USERS (IDs 2-61)
 -- ============================================================
 INSERT INTO `users` (`email`, `password`, `role`, `first_name`, `last_name`, `phone`, `email_verified`, `status`) VALUES
--- Florida cleaners (1-7)
-('carlos.martinez@sunshineroofing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Carlos', 'Martinez', '305-555-0101', 1, 'active'),
-('james.wilson@metroplumbing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'James', 'Wilson', '305-555-0102', 1, 'active'),
-('maria.rodriguez@coastalkitchens.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Maria', 'Rodriguez', '786-555-0103', 1, 'active'),
-('david.johnson@floridahvac.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'David', 'Johnson', '954-555-0104', 1, 'active'),
-('anthony.garcia@palmelectrical.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Anthony', 'Garcia', '407-555-0105', 1, 'active'),
-('robert.brown@tampabathrooms.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Robert', 'Brown', '813-555-0106', 1, 'active'),
-('michael.thomas@gcflorida.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Michael', 'Thomas', '904-555-0107', 1, 'active'),
-
--- California cleaners (8-14)
-('william.davis@bayarearoofing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'William', 'Davis', '415-555-0108', 1, 'active'),
-('daniel.lee@pacificplumbing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Daniel', 'Lee', '310-555-0109', 1, 'active'),
-('kevin.chen@socalpaint.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Kevin', 'Chen', '619-555-0110', 1, 'active'),
-('brian.taylor@goldenstatehvac.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Brian', 'Taylor', '408-555-0111', 1, 'active'),
-('steven.kim@ladeckspatios.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Steven', 'Kim', '213-555-0112', 1, 'active'),
-('jason.nguyen@sftileandfloor.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Jason', 'Nguyen', '510-555-0113', 1, 'active'),
-('richard.moore@sacramentofencing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Richard', 'Moore', '916-555-0114', 1, 'active'),
-
--- Texas cleaners (15-21)
-('mark.hernandez@lonestarroofing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Mark', 'Hernandez', '713-555-0115', 1, 'active'),
-('paul.smith@texashandyman.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Paul', 'Smith', '214-555-0116', 1, 'active'),
-('donald.white@dallaskitchens.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Donald', 'White', '469-555-0117', 1, 'active'),
-('jose.perez@austinhomereno.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Jose', 'Perez', '512-555-0118', 1, 'active'),
-('andrew.jackson@satownelectric.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Andrew', 'Jackson', '210-555-0119', 1, 'active'),
-('chris.lopez@texasconcrete.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Chris', 'Lopez', '817-555-0120', 1, 'active'),
-('george.martinez2@houstonsiding.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'George', 'Martinez', '281-555-0121', 1, 'active'),
-
--- New York cleaners (22-26)
-('frank.rossi@empireroofing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Frank', 'Rossi', '212-555-0122', 1, 'active'),
-('john.murphy@nycplumbing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'John', 'Murphy', '718-555-0123', 1, 'active'),
-('peter.sullivan@brooklynbath.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Peter', 'Sullivan', '917-555-0124', 1, 'active'),
-('tom.kelly@buffaloinsulation.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Tom', 'Kelly', '716-555-0125', 1, 'active'),
-('mike.oconnor@rochesterpainting.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Mike', 'O\'Connor', '585-555-0126', 1, 'active'),
-
--- Illinois cleaners (27-30)
-('edward.kowalski@chicagoroofing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Edward', 'Kowalski', '312-555-0127', 1, 'active'),
-('tony.russo@windycityhvac.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Tony', 'Russo', '773-555-0128', 1, 'active'),
-('matt.nowak@chicagoflooring.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Matt', 'Nowak', '630-555-0129', 1, 'active'),
-('jim.brady@aurorahandyman.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Jim', 'Brady', '331-555-0130', 1, 'active'),
-
--- Georgia cleaners (31-33)
-('derek.washington@peachtreebuilders.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Derek', 'Washington', '404-555-0131', 1, 'active'),
-('marcus.hall@atlantagutters.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Marcus', 'Hall', '678-555-0132', 1, 'active'),
-('leon.carter@savannahgarage.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Leon', 'Carter', '912-555-0133', 1, 'active'),
-
--- North Carolina cleaners (34-36)
-('kevin.harris@charlotteremodel.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Kevin', 'Harris', '704-555-0134', 1, 'active'),
-('alex.young@raleighdecks.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Alex', 'Young', '919-555-0135', 1, 'active'),
-('travis.scott@durhambasements.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Travis', 'Scott', '984-555-0136', 1, 'active'),
-
--- Ohio cleaners (37-39)
-('ryan.miller@buckeyeroofing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Ryan', 'Miller', '614-555-0137', 1, 'active'),
-('greg.clark@clevelandhvac.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Greg', 'Clark', '216-555-0138', 1, 'active'),
-('sean.baker@cincinnatiplumbing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Sean', 'Baker', '513-555-0139', 1, 'active'),
-
--- Pennsylvania cleaners (40-42)
-('nick.campbell@phillyhomereno.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Nick', 'Campbell', '215-555-0140', 1, 'active'),
-('dave.stewart@pittsburghelectric.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Dave', 'Stewart', '412-555-0141', 1, 'active'),
-('pat.morgan@keystoneconcrete.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Pat', 'Morgan', '610-555-0142', 1, 'active'),
-
--- Arizona cleaners (43-45)
-('ray.gonzalez@desertroofing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Ray', 'Gonzalez', '602-555-0143', 1, 'active'),
-('scott.turner@phoenixhvac.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Scott', 'Turner', '480-555-0144', 1, 'active'),
-('adam.ramirez@tucsonhandyman.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Adam', 'Ramirez', '520-555-0145', 1, 'active'),
-
--- Washington cleaners (46-47)
-('eric.anderson@seattledecks.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Eric', 'Anderson', '206-555-0146', 1, 'active'),
-('tyler.wright@pugetsoundplumbing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Tyler', 'Wright', '253-555-0147', 1, 'active'),
-
--- Colorado cleaners (48-49)
-('ben.foster@milehighroofing.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Ben', 'Foster', '303-555-0148', 1, 'active'),
-('luke.ward@denverinsulation.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Luke', 'Ward', '720-555-0149', 1, 'active'),
-
--- New Jersey (50)
-('sam.diaz@gardenstatepainting.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Sam', 'Diaz', '201-555-0150', 1, 'active'),
-
--- Virginia (51)
-('craig.reed@virginiabuilders.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Craig', 'Reed', '757-555-0151', 1, 'active'),
-
--- Massachusetts (52)
-('ian.burke@bostonbathremodel.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Ian', 'Burke', '617-555-0152', 1, 'active');
-
+-- Florida (1-10)
+('info@sparklehomecleaning.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Maria', 'Gonzalez', '305-555-0201', 1, 'active'),
+('info@miamimaidservice.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Jessica', 'Perez', '305-555-0202', 1, 'active'),
+('info@floridafreshclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Laura', 'Chen', '561-555-0203', 1, 'active'),
+('info@sunshinedeepclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Angela', 'Rivera', '954-555-0204', 1, 'active'),
+('info@gulfcoastcommercial.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Robert', 'Williams', '813-555-0205', 1, 'active'),
+('info@tampacarpetpros.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'James', 'Thompson', '813-555-0206', 1, 'active'),
+('info@orlandopressurewash.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Carlos', 'Martinez', '407-555-0207', 1, 'active'),
+('info@pbwindowmasters.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'David', 'Lee', '561-555-0208', 1, 'active'),
+('info@ftlpoolcare.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Anthony', 'Garcia', '954-555-0209', 1, 'active'),
+('info@jaxjanitorial.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Marcus', 'Johnson', '904-555-0210', 1, 'active'),
+-- California (11-18)
+('info@lapristinecleaning.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Michelle', 'Kim', '310-555-0211', 1, 'active'),
+('info@bayareaecoclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Sarah', 'Nguyen', '415-555-0212', 1, 'active'),
+('info@socalcarpettile.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Daniel', 'Rodriguez', '619-555-0213', 1, 'active'),
+('info@goldenstatewindow.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Kevin', 'Park', '213-555-0214', 1, 'active'),
+('info@sacmoveclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Jennifer', 'Taylor', '916-555-0215', 1, 'active'),
+('info@sdofficeclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Brian', 'Anderson', '619-555-0216', 1, 'active'),
+('info@malibuvacationclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Rachel', 'White', '310-555-0217', 1, 'active'),
+('info@svjanitorial.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Andrew', 'Patel', '408-555-0218', 1, 'active'),
+-- Texas (19-26)
+('info@houstonhousehelpers.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Rosa', 'Hernandez', '713-555-0219', 1, 'active'),
+('info@dallasdeepclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Michael', 'Davis', '214-555-0220', 1, 'active'),
+('info@austinecomaids.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Emily', 'Wilson', '512-555-0221', 1, 'active'),
+('info@sapressurepros.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Jose', 'Lopez', '210-555-0222', 1, 'active'),
+('info@dfwcommercial.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Thomas', 'Brown', '817-555-0223', 1, 'active'),
+('info@txairductpros.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Steven', 'Miller', '214-555-0224', 1, 'active'),
+('info@houstonrestaurantclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Patricia', 'Moore', '713-555-0225', 1, 'active'),
+('info@fwpostconstruction.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Richard', 'Clark', '817-555-0226', 1, 'active'),
+-- New York (27-33)
+('info@nycspotless.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Anna', 'Petrov', '212-555-0227', 1, 'active'),
+('info@manhattanmaidco.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Lisa', 'Chang', '212-555-0228', 1, 'active'),
+('info@brooklyncarpetcare.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'William', 'O\'Brien', '718-555-0229', 1, 'active'),
+('info@empirewindowcleaning.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Gregory', 'Santos', '212-555-0230', 1, 'active'),
+('info@queensofficemaint.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Kenneth', 'Ali', '718-555-0231', 1, 'active'),
+('info@bronxmedicalclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Sandra', 'Washington', '718-555-0232', 1, 'active'),
+('info@lipoolpatio.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Frank', 'DeLuca', '516-555-0233', 1, 'active'),
+-- Illinois (34-38)
+('info@chicagocleanteam.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Natalie', 'Brooks', '312-555-0234', 1, 'active'),
+('info@windycityupholstery.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Derek', 'Foster', '312-555-0235', 1, 'active'),
+('info@springfieldtile.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Paul', 'Mitchell', '217-555-0236', 1, 'active'),
+('info@ilairqualitypros.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Raymond', 'Scott', '312-555-0237', 1, 'active'),
+('info@chirestaurantclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Christina', 'Reyes', '312-555-0238', 1, 'active'),
+-- Georgia (39-42)
+('info@atlantafreshclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Keisha', 'Jackson', '404-555-0239', 1, 'active'),
+('info@peachstatepw.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Brandon', 'Harris', '404-555-0240', 1, 'active'),
+('info@gamedicalclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Diana', 'Powell', '678-555-0241', 1, 'active'),
+('info@savannahvacation.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Brittany', 'Cooper', '912-555-0242', 1, 'active'),
+-- Arizona (43-46)
+('info@phxtilegrout.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Nathan', 'Reed', '602-555-0243', 1, 'active'),
+('info@scottsdalehoardinghelp.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Samantha', 'Torres', '480-555-0244', 1, 'active'),
+('info@tucsonpoolclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Victor', 'Ramirez', '520-555-0245', 1, 'active'),
+('info@azdesertclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Cynthia', 'Bell', '602-555-0246', 1, 'active'),
+-- Colorado (47-50)
+('info@denvergreenmaids.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Megan', 'Evans', '303-555-0247', 1, 'active'),
+('info@boulderecoclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Tyler', 'Hughes', '303-555-0248', 1, 'active'),
+('info@csofficepro.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Christine', 'Murphy', '719-555-0249', 1, 'active'),
+('info@aspenvacationclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Jason', 'Sullivan', '970-555-0250', 1, 'active'),
+-- Washington (51-53)
+('info@seattlecleanscene.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Amy', 'Nakamura', '206-555-0251', 1, 'active'),
+('info@tacomaindustrialclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Patrick', 'Kelly', '253-555-0252', 1, 'active'),
+('info@olympiarestaurantclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Hannah', 'Stewart', '360-555-0253', 1, 'active'),
+-- Nevada (54-56)
+('info@vegasstripclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Marco', 'Rossi', '702-555-0254', 1, 'active'),
+('info@renoairductclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Diane', 'Collins', '775-555-0255', 1, 'active'),
+('info@vegasmedicalclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'George', 'Adams', '702-555-0256', 1, 'active'),
+-- North Carolina (57-58)
+('info@charlottemoveclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Stephanie', 'Barnes', '704-555-0257', 1, 'active'),
+('info@raleighhoarding.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Larry', 'Griffin', '919-555-0258', 1, 'active'),
+-- New Jersey (59-60)
+('info@jerseywindowclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Vincent', 'Romano', '201-555-0259', 1, 'active'),
+('info@newarkwarehouseclean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cleaner', 'Janice', 'Price', '973-555-0260', 1, 'active');
 
 -- ============================================================
--- CLEANER PROFILES (50 cleaners)
+-- CLEANER PROFILES (IDs 1-60, user_id 2-61)
+-- state_id: FL=10, CA=5, TX=44, NY=33, IL=14, GA=11, AZ=3, CO=6, WA=48, NV=29, NC=34, NJ=31
 -- ============================================================
+INSERT INTO `cleaners` (`user_id`, `business_name`, `slug`, `tagline`, `description`, `phone`, `email`, `website`, `address`, `city_id`, `state_id`, `zip_code`, `lat`, `lng`, `license_number`, `license_verified`, `is_insured`, `is_verified`, `is_featured`, `years_experience`, `employees_count`, `plan`, `avg_rating`, `review_count`, `profile_views`, `leads_received`, `status`, `created_at`) VALUES
 
--- Florida cleaners (1-7)
-INSERT INTO `cleaners` (`user_id`, `business_name`, `slug`, `tagline`, `description`, `phone`, `email`, `city_id`, `state_id`, `zip_code`, `license_number`, `license_verified`, `is_insured`, `is_verified`, `is_featured`, `years_experience`, `employees_count`, `plan`, `avg_rating`, `review_count`, `status`) VALUES
-
--- 1. Sunshine Roofing Co. - Miami, FL
-((SELECT id FROM users WHERE email = 'carlos.martinez@sunshineroofing.com'),
-'Sunshine Roofing Co.', 'sunshine-roofing-co',
-'Miami''s Most Trusted Roofing Experts',
-'Sunshine Roofing Co. has been protecting South Florida homes for over 18 years. We specialize in hurricane-resistant roof installations, tile and shingle replacements, and emergency storm damage repairs. Our team is fully licensed, insured, and committed to delivering exceptional craftsmanship on every project.',
-'305-555-0101', 'info@sunshineroofing.com',
-(SELECT id FROM cities WHERE slug = 'miami' AND state_id = (SELECT id FROM states WHERE code = 'FL')),
-(SELECT id FROM states WHERE code = 'FL'),
-'33130', 'CCC1330456', 1, 1, 1, 1, 18, '11-25', 'premium', 4.85, 12, 'active'),
-
--- 2. Metro Plumbing Solutions - Miami, FL
-((SELECT id FROM users WHERE email = 'james.wilson@metroplumbing.com'),
-'Metro Plumbing Solutions', 'metro-plumbing-solutions',
-'Fast, Reliable Plumbing Services',
-'Metro Plumbing Solutions provides comprehensive plumbing services throughout the Miami-Dade area. From emergency leak repairs and water heater installations to full bathroom plumbing rough-ins, our licensed plumbers arrive on time and get the job done right. We offer upfront pricing with no hidden fees.',
-'305-555-0102', 'service@metroplumbing.com',
-(SELECT id FROM cities WHERE slug = 'miami' AND state_id = (SELECT id FROM states WHERE code = 'FL')),
-(SELECT id FROM states WHERE code = 'FL'),
-'33125', 'CFC1429871', 1, 1, 1, 1, 12, '6-10', 'pro', 4.70, 8, 'active'),
-
--- 3. Coastal Kitchen & Bath - Fort Lauderdale, FL
-((SELECT id FROM users WHERE email = 'maria.rodriguez@coastalkitchens.com'),
-'Coastal Kitchen & Bath', 'coastal-kitchen-and-bath',
-'Stunning Kitchen & Bath Transformations',
-'Coastal Kitchen & Bath is a full-service remodeling company specializing in luxury kitchen and bathroom renovations. We handle everything from design consultation to final installation, using premium materials and skilled craftspeople. Our portfolio includes hundreds of successful projects across Broward County.',
-'786-555-0103', 'design@coastalkitchens.com',
-(SELECT id FROM cities WHERE slug = 'fort-lauderdale' AND state_id = (SELECT id FROM states WHERE code = 'FL')),
-(SELECT id FROM states WHERE code = 'FL'),
-'33301', 'CGC1527890', 1, 1, 1, 1, 15, '11-25', 'premium', 4.90, 10, 'active'),
-
--- 4. Florida Comfort HVAC - Orlando, FL
-((SELECT id FROM users WHERE email = 'david.johnson@floridahvac.com'),
-'Florida Comfort HVAC', 'florida-comfort-hvac',
-'Keeping Florida Cool Since 2008',
-'Florida Comfort HVAC delivers expert heating and cooling solutions for homes and businesses across Central Florida. We install, repair, and maintain all major HVAC brands, and we are a Carrier Factory Authorized Dealer. Our technicians are NATE-certified and available for same-day service calls.',
-'954-555-0104', 'service@floridahvac.com',
-(SELECT id FROM cities WHERE slug = 'orlando' AND state_id = (SELECT id FROM states WHERE code = 'FL')),
-(SELECT id FROM states WHERE code = 'FL'),
-'32801', 'CAC1821345', 1, 1, 1, 0, 16, '11-25', 'pro', 4.60, 7, 'active'),
-
--- 5. Palm City Electrical - Orlando, FL
-((SELECT id FROM users WHERE email = 'anthony.garcia@palmelectrical.com'),
-'Palm City Electrical', 'palm-city-electrical',
-'Licensed Electricians You Can Trust',
-'Palm City Electrical provides safe, code-compliant electrical services for residential and commercial properties. We handle everything from panel upgrades and whole-house rewiring to smart home installations and generator hookups. Available 24/7 for emergency electrical repairs.',
-'407-555-0105', 'info@palmelectrical.com',
-(SELECT id FROM cities WHERE slug = 'orlando' AND state_id = (SELECT id FROM states WHERE code = 'FL')),
-(SELECT id FROM states WHERE code = 'FL'),
-'32803', 'EC13009876', 1, 1, 1, 0, 10, '6-10', 'pro', 4.50, 5, 'active'),
-
--- 6. Tampa Bay Bath Remodeling - Tampa, FL
-((SELECT id FROM users WHERE email = 'robert.brown@tampabathrooms.com'),
-'Tampa Bay Bath Remodeling', 'tampa-bay-bath-remodeling',
-'Beautiful Bathrooms on Any Budget',
-'Tampa Bay Bath Remodeling transforms outdated bathrooms into stunning, functional spaces. We specialize in walk-in showers, tub-to-shower conversions, custom vanities, and ADA-accessible remodels. Most projects are completed within 5-7 business days with minimal disruption to your home.',
-'813-555-0106', 'info@tampabathrooms.com',
-(SELECT id FROM cities WHERE slug = 'tampa' AND state_id = (SELECT id FROM states WHERE code = 'FL')),
-(SELECT id FROM states WHERE code = 'FL'),
-'33602', 'CGC1530012', 1, 1, 0, 0, 8, '6-10', 'basic', 4.40, 6, 'active'),
-
--- 7. First Coast General Contracting - Jacksonville, FL
-((SELECT id FROM users WHERE email = 'michael.thomas@gcflorida.com'),
-'First Coast General Contracting', 'first-coast-general-contracting',
-'Your Total Home Building Partner',
-'First Coast General Contracting manages residential and commercial construction projects of all sizes in the Jacksonville metro area. From new home builds and room additions to major renovations and tenant buildouts, our experienced project managers ensure every job is completed on time and on budget.',
-'904-555-0107', 'projects@gcflorida.com',
-(SELECT id FROM cities WHERE slug = 'jacksonville' AND state_id = (SELECT id FROM states WHERE code = 'FL')),
-(SELECT id FROM states WHERE code = 'FL'),
-'32202', 'CGC1528901', 1, 1, 1, 0, 22, '26-50', 'pro', 4.75, 9, 'active'),
-
--- California cleaners (8-14)
-
--- 8. Bay Area Roofing Pros - San Francisco, CA
-((SELECT id FROM users WHERE email = 'william.davis@bayarearoofing.com'),
-'Bay Area Roofing Pros', 'bay-area-roofing-pros',
-'Premium Roofing for the Bay Area',
-'Bay Area Roofing Pros is the top-rated roofing company serving San Francisco and the surrounding Bay Area. We specialize in flat roof systems, slate and tile roofing, and green roof installations. Our crews have completed over 2,000 roofing projects and carry a 10-year workmanship warranty.',
-'415-555-0108', 'info@bayarearoofing.com',
-(SELECT id FROM cities WHERE slug = 'san-francisco' AND state_id = (SELECT id FROM states WHERE code = 'CA')),
-(SELECT id FROM states WHERE code = 'CA'),
-'94102', 'CSLB-1045678', 1, 1, 1, 1, 20, '11-25', 'premium', 4.95, 15, 'active'),
-
--- 9. Pacific Plumbing & Drain - Los Angeles, CA
-((SELECT id FROM users WHERE email = 'daniel.lee@pacificplumbing.com'),
-'Pacific Plumbing & Drain', 'pacific-plumbing-and-drain',
-'LA''s Go-To Plumbing Experts',
-'Pacific Plumbing & Drain has been serving the greater Los Angeles area for over 25 years. We handle all residential and commercial plumbing needs including sewer line repair, tankless water heater installation, and repiping. Our fleet of 15 trucks means we can be at your door fast.',
-'310-555-0109', 'dispatch@pacificplumbing.com',
-(SELECT id FROM cities WHERE slug = 'los-angeles' AND state_id = (SELECT id FROM states WHERE code = 'CA')),
-(SELECT id FROM states WHERE code = 'CA'),
-'90012', 'CSLB-987654', 1, 1, 1, 1, 25, '26-50', 'premium', 4.80, 11, 'active'),
-
--- 10. SoCal Pro Painting - San Diego, CA
-((SELECT id FROM users WHERE email = 'kevin.chen@socalpaint.com'),
-'SoCal Pro Painting', 'socal-pro-painting',
-'Expert Interior & Exterior Painting',
-'SoCal Pro Painting delivers flawless paint jobs for homes and businesses across San Diego County. We use premium Sherwin-Williams and Benjamin Moore paints, offer detailed color consultations, and guarantee clean, straight lines on every project. Free estimates with no obligation.',
-'619-555-0110', 'quotes@socalpaint.com',
-(SELECT id FROM cities WHERE slug = 'san-diego' AND state_id = (SELECT id FROM states WHERE code = 'CA')),
-(SELECT id FROM states WHERE code = 'CA'),
-'92101', 'CSLB-1098765', 1, 1, 0, 0, 9, '6-10', 'basic', 4.55, 4, 'active'),
-
--- 11. Golden State HVAC - San Jose, CA
-((SELECT id FROM users WHERE email = 'brian.taylor@goldenstatehvac.com'),
-'Golden State HVAC', 'golden-state-hvac',
-'Energy-Efficient Heating & Cooling',
-'Golden State HVAC specializes in energy-efficient heating and cooling solutions for Silicon Valley homes and businesses. We install high-SEER systems, ductless mini-splits, and smart thermostats. Our technicians are factory-trained on Lennox, Trane, and Daikin equipment.',
-'408-555-0111', 'service@goldenstatehvac.com',
-(SELECT id FROM cities WHERE slug = 'san-jose' AND state_id = (SELECT id FROM states WHERE code = 'CA')),
-(SELECT id FROM states WHERE code = 'CA'),
-'95110', 'CSLB-1087654', 1, 1, 1, 0, 14, '6-10', 'pro', 4.65, 6, 'active'),
-
--- 12. LA Decks & Outdoor Living - Los Angeles, CA
-((SELECT id FROM users WHERE email = 'steven.kim@ladeckspatios.com'),
-'LA Decks & Outdoor Living', 'la-decks-and-outdoor-living',
-'Custom Outdoor Spaces Built to Last',
-'LA Decks & Outdoor Living creates beautiful outdoor entertainment spaces across the Los Angeles area. We build custom wood and composite decks, pergolas, outdoor kitchens, and patio covers. Our designs blend seamlessly with your home architecture and maximize your outdoor living area.',
-'213-555-0112', 'design@ladeckspatios.com',
-(SELECT id FROM cities WHERE slug = 'los-angeles' AND state_id = (SELECT id FROM states WHERE code = 'CA')),
-(SELECT id FROM states WHERE code = 'CA'),
-'90015', 'CSLB-1056789', 1, 1, 0, 0, 11, '6-10', 'basic', 4.45, 5, 'active'),
-
--- 13. SF Tile & Flooring - San Francisco, CA
-((SELECT id FROM users WHERE email = 'jason.nguyen@sftileandfloor.com'),
-'SF Tile & Flooring', 'sf-tile-and-flooring',
-'Beautiful Floors from Foundation Up',
-'SF Tile & Flooring installs premium hardwood, tile, luxury vinyl, and natural stone flooring throughout San Francisco and Marin County. We also offer custom tile work for kitchens, bathrooms, and fireplaces. Our installers have an average of 12 years experience in the trade.',
-'510-555-0113', 'info@sftileandfloor.com',
-(SELECT id FROM cities WHERE slug = 'san-francisco' AND state_id = (SELECT id FROM states WHERE code = 'CA')),
-(SELECT id FROM states WHERE code = 'CA'),
-'94103', 'CSLB-1034567', 1, 1, 0, 0, 13, '6-10', 'basic', 4.70, 7, 'active'),
-
--- 14. Sacramento Fence & Gate - Sacramento, CA
-((SELECT id FROM users WHERE email = 'richard.moore@sacramentofencing.com'),
-'Sacramento Fence & Gate', 'sacramento-fence-and-gate',
-'Quality Fences for Every Property',
-'Sacramento Fence & Gate builds and repairs all types of fencing including wood privacy, vinyl, ornamental iron, and chain-link. We also install automated driveway gates and access control systems. Serving Sacramento and surrounding communities with dependable service since 2013.',
-'916-555-0114', 'info@sacramentofencing.com',
-(SELECT id FROM cities WHERE slug = 'sacramento' AND state_id = (SELECT id FROM states WHERE code = 'CA')),
-(SELECT id FROM states WHERE code = 'CA'),
-'95814', 'CSLB-1023456', 1, 1, 0, 0, 11, '2-5', 'free', 4.35, 3, 'active'),
-
--- Texas cleaners (15-21)
-
--- 15. Lone Star Roofing & Construction - Houston, TX
-((SELECT id FROM users WHERE email = 'mark.hernandez@lonestarroofing.com'),
-'Lone Star Roofing & Construction', 'lone-star-roofing-and-construction',
-'Tough Roofs for Texas Weather',
-'Lone Star Roofing & Construction protects Houston-area homes with durable, storm-resistant roofing systems. We are GAF Master Elite certified and specialize in impact-resistant shingles, metal roofing, and insurance claim assistance. Family-owned and operated since 2005.',
-'713-555-0115', 'info@lonestarroofing.com',
-(SELECT id FROM cities WHERE slug = 'houston' AND state_id = (SELECT id FROM states WHERE code = 'TX')),
-(SELECT id FROM states WHERE code = 'TX'),
-'77002', 'TRCC-29876', 1, 1, 1, 1, 19, '11-25', 'premium', 4.80, 10, 'active'),
-
--- 16. Texas Handyman Services - Dallas, TX
-((SELECT id FROM users WHERE email = 'paul.smith@texashandyman.com'),
-'Texas Handyman Services', 'texas-handyman-services',
-'No Job Too Small',
-'Texas Handyman Services handles all those home repairs and improvements you never seem to get to. From drywall patching and door installation to ceiling fan mounting and furniture assembly, our skilled handymen bring the tools and expertise to get it done right the first time.',
-'214-555-0116', 'book@texashandyman.com',
-(SELECT id FROM cities WHERE slug = 'dallas' AND state_id = (SELECT id FROM states WHERE code = 'TX')),
-(SELECT id FROM states WHERE code = 'TX'),
-'75201', NULL, 0, 1, 0, 0, 6, '2-5', 'free', 4.20, 4, 'active'),
-
--- 17. Dallas Kitchen Design Studio - Dallas, TX
-((SELECT id FROM users WHERE email = 'donald.white@dallaskitchens.com'),
-'Dallas Kitchen Design Studio', 'dallas-kitchen-design-studio',
-'Dream Kitchens Made Real',
-'Dallas Kitchen Design Studio specializes in high-end kitchen remodeling and custom cabinetry. We partner with top appliance brands and stone fabricators to deliver stunning kitchen transformations. Our in-house designers use 3D modeling to help you visualize your dream kitchen before construction begins.',
-'469-555-0117', 'design@dallaskitchens.com',
-(SELECT id FROM cities WHERE slug = 'dallas' AND state_id = (SELECT id FROM states WHERE code = 'TX')),
-(SELECT id FROM states WHERE code = 'TX'),
-'75204', 'TRCC-31234', 1, 1, 1, 1, 17, '11-25', 'pro', 4.85, 9, 'active'),
-
--- 18. Austin Home Renovations - Austin, TX
-((SELECT id FROM users WHERE email = 'jose.perez@austinhomereno.com'),
-'Austin Home Renovations', 'austin-home-renovations',
-'Modernize Your Austin Home',
-'Austin Home Renovations brings fresh, modern design to homes throughout the Austin metro. We specialize in whole-house renovations, open-concept conversions, and accessory dwelling unit construction. Our focus on sustainable building practices and local materials sets us apart.',
-'512-555-0118', 'info@austinhomereno.com',
-(SELECT id FROM cities WHERE slug = 'austin' AND state_id = (SELECT id FROM states WHERE code = 'TX')),
-(SELECT id FROM states WHERE code = 'TX'),
-'78701', 'TRCC-30567', 1, 1, 1, 0, 13, '6-10', 'pro', 4.70, 7, 'active'),
-
--- 19. SA Town Electric - San Antonio, TX
-((SELECT id FROM users WHERE email = 'andrew.jackson@satownelectric.com'),
-'SA Town Electric', 'sa-town-electric',
-'San Antonio''s Electrical Specialists',
-'SA Town Electric provides full-service electrical contracting for residential and commercial clients in San Antonio and the Hill Country. We handle new construction wiring, service panel upgrades, lighting design, and EV charger installations. Licensed, bonded, and insured for your protection.',
-'210-555-0119', 'service@satownelectric.com',
-(SELECT id FROM cities WHERE slug = 'san-antonio' AND state_id = (SELECT id FROM states WHERE code = 'TX')),
-(SELECT id FROM states WHERE code = 'TX'),
-'78205', 'TECL-34567', 1, 1, 0, 0, 9, '6-10', 'basic', 4.40, 5, 'active'),
-
--- 20. Texas Concrete Works - Fort Worth, TX
-((SELECT id FROM users WHERE email = 'chris.lopez@texasconcrete.com'),
-'Texas Concrete Works', 'texas-concrete-works',
-'Solid Foundations, Beautiful Finishes',
-'Texas Concrete Works pours and finishes all types of residential and commercial concrete. We build driveways, patios, pool decks, retaining walls, and decorative stamped concrete surfaces. Our experienced crews handle projects from start to finish including demolition, grading, and forming.',
-'817-555-0120', 'estimate@texasconcrete.com',
-(SELECT id FROM cities WHERE slug = 'fort-worth' AND state_id = (SELECT id FROM states WHERE code = 'TX')),
-(SELECT id FROM states WHERE code = 'TX'),
-'76102', NULL, 0, 1, 0, 0, 15, '11-25', 'basic', 4.30, 4, 'active'),
-
--- 21. Houston Siding Experts - Houston, TX
-((SELECT id FROM users WHERE email = 'george.martinez2@houstonsiding.com'),
-'Houston Siding Experts', 'houston-siding-experts',
-'Protect Your Home with Quality Siding',
-'Houston Siding Experts installs and repairs all types of exterior siding including James Hardie fiber cement, vinyl, LP SmartSide, and natural wood. We also handle soffit, fascia, and trim work. Our installations come with industry-leading manufacturer warranties and our own 5-year labor guarantee.',
-'281-555-0121', 'info@houstonsiding.com',
-(SELECT id FROM cities WHERE slug = 'houston' AND state_id = (SELECT id FROM states WHERE code = 'TX')),
-(SELECT id FROM states WHERE code = 'TX'),
-'77003', 'TRCC-28901', 1, 1, 0, 0, 10, '6-10', 'basic', 4.25, 3, 'active'),
-
--- New York cleaners (22-26)
-
--- 22. Empire State Roofing - New York City, NY
-((SELECT id FROM users WHERE email = 'frank.rossi@empireroofing.com'),
-'Empire State Roofing', 'empire-state-roofing',
-'NYC''s Flat Roof Specialists',
-'Empire State Roofing has been keeping New York City buildings dry for over 30 years. We specialize in commercial and residential flat roof systems including TPO, EPDM, and modified bitumen. Our team is experienced with NYC building codes, DOB permits, and landmark building requirements.',
-'212-555-0122', 'info@empireroofing.com',
-(SELECT id FROM cities WHERE slug = 'new-york-city' AND state_id = (SELECT id FROM states WHERE code = 'NY')),
-(SELECT id FROM states WHERE code = 'NY'),
-'10001', 'WC-29876-H', 1, 1, 1, 1, 30, '26-50', 'premium', 4.75, 8, 'active'),
-
--- 23. NYC Master Plumbing - New York City, NY
-((SELECT id FROM users WHERE email = 'john.murphy@nycplumbing.com'),
-'NYC Master Plumbing', 'nyc-master-plumbing',
-'Licensed Master Plumbers Since 1998',
-'NYC Master Plumbing provides expert plumbing services throughout all five boroughs. We handle everything from stopped-up drains and leaky pipes to complete bathroom and kitchen plumbing installations. Our master plumbers understand the unique challenges of New York City plumbing systems.',
-'718-555-0123', 'service@nycplumbing.com',
-(SELECT id FROM cities WHERE slug = 'new-york-city' AND state_id = (SELECT id FROM states WHERE code = 'NY')),
-(SELECT id FROM states WHERE code = 'NY'),
-'10002', 'MP-14567', 1, 1, 1, 0, 26, '11-25', 'pro', 4.60, 6, 'active'),
-
--- 24. Brooklyn Bath Design - New York City, NY
-((SELECT id FROM users WHERE email = 'peter.sullivan@brooklynbath.com'),
-'Brooklyn Bath Design', 'brooklyn-bath-design',
-'Boutique Bathroom Renovations',
-'Brooklyn Bath Design creates stylish, space-efficient bathroom renovations for Brooklyn brownstones, co-ops, and condos. We specialize in custom tile work, frameless glass showers, and heated flooring. Our designers work within your budget to maximize both beauty and function in every project.',
-'917-555-0124', 'design@brooklynbath.com',
-(SELECT id FROM cities WHERE slug = 'new-york-city' AND state_id = (SELECT id FROM states WHERE code = 'NY')),
-(SELECT id FROM states WHERE code = 'NY'),
-'11201', 'HIC-2034567', 1, 1, 0, 0, 12, '6-10', 'basic', 4.50, 5, 'active'),
-
--- 25. Buffalo Insulation Pros - Buffalo, NY
-((SELECT id FROM users WHERE email = 'tom.kelly@buffaloinsulation.com'),
-'Buffalo Insulation Pros', 'buffalo-insulation-pros',
-'Keep the Cold Out, Savings In',
-'Buffalo Insulation Pros helps Western New York homeowners slash their energy bills with professional insulation upgrades. We install blown-in cellulose, spray foam, fiberglass batts, and rigid foam board insulation in attics, walls, basements, and crawl spaces. Free energy assessments available.',
-'716-555-0125', 'info@buffaloinsulation.com',
-(SELECT id FROM cities WHERE slug = 'buffalo' AND state_id = (SELECT id FROM states WHERE code = 'NY')),
-(SELECT id FROM states WHERE code = 'NY'),
-'14201', 'HIC-2045678', 0, 1, 0, 0, 7, '2-5', 'free', 4.10, 3, 'active'),
-
--- 26. Rochester Pro Painting - Rochester, NY
-((SELECT id FROM users WHERE email = 'mike.oconnor@rochesterpainting.com'),
-'Rochester Pro Painting', 'rochester-pro-painting',
-'Quality Painting Inside and Out',
-'Rochester Pro Painting delivers professional interior and exterior painting for homes, offices, and commercial buildings. We prep surfaces thoroughly, use top-quality paints, and pay attention to every detail. Our painters are neat, punctual, and respectful of your property.',
-'585-555-0126', 'quotes@rochesterpainting.com',
-(SELECT id FROM cities WHERE slug = 'rochester' AND state_id = (SELECT id FROM states WHERE code = 'NY')),
-(SELECT id FROM states WHERE code = 'NY'),
-'14604', NULL, 0, 1, 0, 0, 5, '2-5', 'free', 4.00, 2, 'active'),
-
--- Illinois cleaners (27-30)
-
--- 27. Chicago Roofing Authority - Chicago, IL
-((SELECT id FROM users WHERE email = 'edward.kowalski@chicagoroofing.com'),
-'Chicago Roofing Authority', 'chicago-roofing-authority',
-'Built to Handle Chicago Winters',
-'Chicago Roofing Authority specializes in durable roofing systems designed to withstand harsh Midwest winters. We install architectural shingles, standing seam metal, and flat commercial systems. Our team handles ice dam prevention, attic ventilation, and emergency tarping for storm damage.',
-'312-555-0127', 'info@chicagoroofing.com',
-(SELECT id FROM cities WHERE slug = 'chicago' AND state_id = (SELECT id FROM states WHERE code = 'IL')),
-(SELECT id FROM states WHERE code = 'IL'),
-'60601', 'IL-104-017890', 1, 1, 1, 0, 21, '11-25', 'pro', 4.65, 7, 'active'),
-
--- 28. Windy City HVAC Services - Chicago, IL
-((SELECT id FROM users WHERE email = 'tony.russo@windycityhvac.com'),
-'Windy City HVAC Services', 'windy-city-hvac-services',
-'Comfort Through Every Season',
-'Windy City HVAC Services keeps Chicagoland homes comfortable year-round. We install and service furnaces, air conditioners, boilers, and heat pumps from top brands like Carrier, Lennox, and Rheem. We also offer preventive maintenance plans that help extend equipment life and reduce energy costs.',
-'773-555-0128', 'service@windycityhvac.com',
-(SELECT id FROM cities WHERE slug = 'chicago' AND state_id = (SELECT id FROM states WHERE code = 'IL')),
-(SELECT id FROM states WHERE code = 'IL'),
-'60614', 'IL-055-023456', 1, 1, 1, 0, 16, '6-10', 'pro', 4.55, 6, 'active'),
-
--- 29. Chicagoland Flooring Co. - Chicago, IL
-((SELECT id FROM users WHERE email = 'matt.nowak@chicagoflooring.com'),
-'Chicagoland Flooring Co.', 'chicagoland-flooring-co',
-'Beautiful Floors at Honest Prices',
-'Chicagoland Flooring Co. installs, refinishes, and repairs all types of flooring for homes and businesses across the greater Chicago area. We work with hardwood, engineered wood, luxury vinyl plank, tile, and carpet. Our showroom features over 500 samples to choose from.',
-'630-555-0129', 'info@chicagoflooring.com',
-(SELECT id FROM cities WHERE slug = 'chicago' AND state_id = (SELECT id FROM states WHERE code = 'IL')),
-(SELECT id FROM states WHERE code = 'IL'),
-'60606', 'IL-104-025678', 1, 1, 0, 0, 14, '6-10', 'basic', 4.50, 5, 'active'),
-
--- 30. Aurora Handyman Connection - Aurora, IL
-((SELECT id FROM users WHERE email = 'jim.brady@aurorahandyman.com'),
-'Aurora Handyman Connection', 'aurora-handyman-connection',
-'Your Neighborhood Fix-It Pros',
-'Aurora Handyman Connection provides reliable repair and maintenance services for homeowners in Aurora, Naperville, and surrounding suburbs. We handle drywall repair, deck staining, gutter cleaning, appliance installation, and dozens of other home tasks. Flat-rate pricing with no hourly surprises.',
-'331-555-0130', 'book@aurorahandyman.com',
-(SELECT id FROM cities WHERE slug = 'aurora' AND state_id = (SELECT id FROM states WHERE code = 'IL')),
-(SELECT id FROM states WHERE code = 'IL'),
-'60502', NULL, 0, 1, 0, 0, 4, '2-5', 'free', 4.15, 3, 'active'),
-
--- Georgia cleaners (31-33)
-
--- 31. Peachtree Builders Group - Atlanta, GA
-((SELECT id FROM users WHERE email = 'derek.washington@peachtreebuilders.com'),
-'Peachtree Builders Group', 'peachtree-builders-group',
-'Atlanta''s Premier General Cleaner',
-'Peachtree Builders Group is a full-service general contracting firm serving the greater Atlanta area. We manage new home construction, major renovations, and commercial buildouts with transparent budgeting and weekly progress updates. Our portfolio includes over 300 completed projects.',
-'404-555-0131', 'info@peachtreebuilders.com',
-(SELECT id FROM cities WHERE slug = 'atlanta' AND state_id = (SELECT id FROM states WHERE code = 'GA')),
-(SELECT id FROM states WHERE code = 'GA'),
-'30303', 'GCCO-006789', 1, 1, 1, 1, 24, '26-50', 'pro', 4.80, 8, 'active'),
-
--- 32. Atlanta Gutter Solutions - Atlanta, GA
-((SELECT id FROM users WHERE email = 'marcus.hall@atlantagutters.com'),
-'Atlanta Gutter Solutions', 'atlanta-gutter-solutions',
-'Seamless Gutters Installed Right',
-'Atlanta Gutter Solutions installs, repairs, and maintains seamless aluminum gutters, gutter guards, and downspout systems. We protect your home from water damage with properly pitched gutters and custom-fabricated corners. We also offer gutter cleaning service plans to keep everything flowing.',
-'678-555-0132', 'service@atlantagutters.com',
-(SELECT id FROM cities WHERE slug = 'atlanta' AND state_id = (SELECT id FROM states WHERE code = 'GA')),
-(SELECT id FROM states WHERE code = 'GA'),
-'30305', NULL, 0, 1, 0, 0, 6, '2-5', 'free', 4.20, 3, 'active'),
-
--- 33. Savannah Garage Transformations - Savannah, GA
-((SELECT id FROM users WHERE email = 'leon.carter@savannahgarage.com'),
-'Savannah Garage Transformations', 'savannah-garage-transformations',
-'More Than Just a Garage',
-'Savannah Garage Transformations converts underutilized garages into functional living spaces, home offices, and workshops. We also install epoxy garage flooring, custom storage systems, and insulated garage doors. Our projects add value and usable square footage to your home.',
-'912-555-0133', 'info@savannahgarage.com',
-(SELECT id FROM cities WHERE slug = 'savannah' AND state_id = (SELECT id FROM states WHERE code = 'GA')),
-(SELECT id FROM states WHERE code = 'GA'),
-'31401', 'GCCO-007890', 1, 1, 0, 0, 7, '2-5', 'free', 4.30, 4, 'active'),
-
--- North Carolina cleaners (34-36)
-
--- 34. Charlotte Home Remodeling - Charlotte, NC
-((SELECT id FROM users WHERE email = 'kevin.harris@charlotteremodel.com'),
-'Charlotte Home Remodeling', 'charlotte-home-remodeling',
-'Transform Your Home Inside & Out',
-'Charlotte Home Remodeling delivers complete home transformation services including kitchen and bath remodels, room additions, and whole-house renovations. Our design-build approach streamlines the process from concept to completion. We are a member of the Charlotte Home Builders Association.',
-'704-555-0134', 'info@charlotteremodel.com',
-(SELECT id FROM cities WHERE slug = 'charlotte' AND state_id = (SELECT id FROM states WHERE code = 'NC')),
-(SELECT id FROM states WHERE code = 'NC'),
-'28202', 'NC-GC-72345', 1, 1, 1, 1, 18, '11-25', 'pro', 4.75, 8, 'active'),
-
--- 35. Raleigh Custom Decks - Raleigh, NC
-((SELECT id FROM users WHERE email = 'alex.young@raleighdecks.com'),
-'Raleigh Custom Decks', 'raleigh-custom-decks',
-'Outdoor Living Crafted to Perfection',
-'Raleigh Custom Decks builds premium composite and hardwood decks, screened porches, and outdoor kitchens for Triangle-area homeowners. We use TimberTech, Trex, and Azek materials for low-maintenance beauty that lasts. Free design consultations with 3D renderings included.',
-'919-555-0135', 'build@raleighdecks.com',
-(SELECT id FROM cities WHERE slug = 'raleigh' AND state_id = (SELECT id FROM states WHERE code = 'NC')),
-(SELECT id FROM states WHERE code = 'NC'),
-'27601', 'NC-GC-74567', 1, 1, 0, 0, 10, '6-10', 'basic', 4.45, 5, 'active'),
-
--- 36. Durham Basement Solutions - Durham, NC
-((SELECT id FROM users WHERE email = 'travis.scott@durhambasements.com'),
-'Durham Basement Solutions', 'durham-basement-solutions',
-'Unlock Your Basement''s Potential',
-'Durham Basement Solutions specializes in basement finishing, waterproofing, and remodeling. We transform dark, unused basements into comfortable living areas, home theaters, and in-law suites. Our waterproofing systems come with a transferable lifetime warranty for total peace of mind.',
-'984-555-0136', 'info@durhambasements.com',
-(SELECT id FROM cities WHERE slug = 'durham' AND state_id = (SELECT id FROM states WHERE code = 'NC')),
-(SELECT id FROM states WHERE code = 'NC'),
-'27701', 'NC-GC-75678', 1, 1, 0, 0, 8, '6-10', 'basic', 4.35, 4, 'active'),
-
--- Ohio cleaners (37-39)
-
--- 37. Buckeye Roofing & Exteriors - Columbus, OH
-((SELECT id FROM users WHERE email = 'ryan.miller@buckeyeroofing.com'),
-'Buckeye Roofing & Exteriors', 'buckeye-roofing-and-exteriors',
-'Central Ohio''s Roofing Experts',
-'Buckeye Roofing & Exteriors provides top-quality roofing, siding, and window installations for homes across Central Ohio. We are an Owens Corning Platinum Preferred Cleaner and offer the industry''s best warranty coverage. Free drone-assisted roof inspections available.',
-'614-555-0137', 'info@buckeyeroofing.com',
-(SELECT id FROM cities WHERE slug = 'columbus' AND state_id = (SELECT id FROM states WHERE code = 'OH')),
-(SELECT id FROM states WHERE code = 'OH'),
-'43215', 'OH-RC-89012', 1, 1, 1, 0, 16, '11-25', 'pro', 4.60, 6, 'active'),
-
--- 38. Cleveland Climate Control - Cleveland, OH
-((SELECT id FROM users WHERE email = 'greg.clark@clevelandhvac.com'),
-'Cleveland Climate Control', 'cleveland-climate-control',
-'Reliable Heating & Cooling Solutions',
-'Cleveland Climate Control provides dependable HVAC installation, repair, and maintenance services for Northeast Ohio homes and businesses. We specialize in high-efficiency furnaces, central air systems, and ductwork design. Our comfort advisors help you choose the right system for your home and budget.',
-'216-555-0138', 'service@clevelandhvac.com',
-(SELECT id FROM cities WHERE slug = 'cleveland' AND state_id = (SELECT id FROM states WHERE code = 'OH')),
-(SELECT id FROM states WHERE code = 'OH'),
-'44113', 'OH-HVAC-56789', 1, 1, 0, 0, 11, '6-10', 'basic', 4.40, 4, 'active'),
-
--- 39. Cincinnati Plumbing Co. - Cincinnati, OH
-((SELECT id FROM users WHERE email = 'sean.baker@cincinnatiplumbing.com'),
-'Cincinnati Plumbing Co.', 'cincinnati-plumbing-co',
-'Honest Plumbing at Fair Prices',
-'Cincinnati Plumbing Co. has served the Greater Cincinnati and Northern Kentucky area for over 20 years. We fix leaks, unclog drains, install water heaters, and handle complete plumbing renovations. Our upfront pricing policy means you know the cost before we start any work.',
-'513-555-0139', 'dispatch@cincinnatiplumbing.com',
-(SELECT id FROM cities WHERE slug = 'cincinnati' AND state_id = (SELECT id FROM states WHERE code = 'OH')),
-(SELECT id FROM states WHERE code = 'OH'),
-'45202', 'OH-PL-67890', 1, 1, 0, 0, 20, '6-10', 'basic', 4.55, 5, 'active'),
-
--- Pennsylvania cleaners (40-42)
-
--- 40. Philly Home Renovations - Philadelphia, PA
-((SELECT id FROM users WHERE email = 'nick.campbell@phillyhomereno.com'),
-'Philly Home Renovations', 'philly-home-renovations',
-'Revitalizing Philadelphia Homes',
-'Philly Home Renovations specializes in restoring and renovating Philadelphia rowhomes, townhouses, and historic properties. We handle complete gut renovations, kitchen and bath remodels, and structural repairs while preserving architectural character. Fully licensed with Philadelphia L&I.',
-'215-555-0140', 'info@phillyhomereno.com',
-(SELECT id FROM cities WHERE slug = 'philadelphia' AND state_id = (SELECT id FROM states WHERE code = 'PA')),
-(SELECT id FROM states WHERE code = 'PA'),
-'19103', 'PA-HC-056789', 1, 1, 1, 0, 19, '11-25', 'pro', 4.70, 7, 'active'),
-
--- 41. Pittsburgh Electric Solutions - Pittsburgh, PA
-((SELECT id FROM users WHERE email = 'dave.stewart@pittsburghelectric.com'),
-'Pittsburgh Electric Solutions', 'pittsburgh-electric-solutions',
-'Powering Pittsburgh Homes & Businesses',
-'Pittsburgh Electric Solutions provides comprehensive electrical services for residential and commercial clients in the Pittsburgh metro. We specialize in electrical panel upgrades, code violation corrections, generator installations, and LED lighting retrofits. Available for emergency service 24/7.',
-'412-555-0141', 'service@pittsburghelectric.com',
-(SELECT id FROM cities WHERE slug = 'pittsburgh' AND state_id = (SELECT id FROM states WHERE code = 'PA')),
-(SELECT id FROM states WHERE code = 'PA'),
-'15222', 'PA-EC-045678', 1, 1, 0, 0, 14, '6-10', 'basic', 4.45, 5, 'active'),
-
--- 42. Keystone Concrete & Masonry - Philadelphia, PA
-((SELECT id FROM users WHERE email = 'pat.morgan@keystoneconcrete.com'),
-'Keystone Concrete & Masonry', 'keystone-concrete-and-masonry',
-'Built on Solid Foundations',
-'Keystone Concrete & Masonry pours foundations, builds retaining walls, installs brick and stone veneers, and creates beautiful stamped concrete patios. We serve the greater Philadelphia area and have experience with both new construction and restoration of historic masonry structures.',
-'610-555-0142', 'estimate@keystoneconcrete.com',
-(SELECT id FROM cities WHERE slug = 'philadelphia' AND state_id = (SELECT id FROM states WHERE code = 'PA')),
-(SELECT id FROM states WHERE code = 'PA'),
-'19106', 'PA-HC-067890', 1, 1, 0, 0, 17, '11-25', 'basic', 4.50, 4, 'active'),
-
--- Arizona cleaners (43-45)
-
--- 43. Desert Shield Roofing - Phoenix, AZ
-((SELECT id FROM users WHERE email = 'ray.gonzalez@desertroofing.com'),
-'Desert Shield Roofing', 'desert-shield-roofing',
-'Roofing Built for the Desert Sun',
-'Desert Shield Roofing installs and repairs residential and commercial roofing systems designed for Arizona''s extreme heat. We specialize in tile roofing, foam roofing, and cool roof coatings that lower energy costs. Our crews work early mornings to beat the heat and deliver quality results.',
-'602-555-0143', 'info@desertroofing.com',
-(SELECT id FROM cities WHERE slug = 'phoenix' AND state_id = (SELECT id FROM states WHERE code = 'AZ')),
-(SELECT id FROM states WHERE code = 'AZ'),
-'85004', 'ROC-298765', 1, 1, 1, 0, 14, '6-10', 'basic', 4.55, 5, 'active'),
-
--- 44. Phoenix Comfort HVAC - Phoenix, AZ
-((SELECT id FROM users WHERE email = 'scott.turner@phoenixhvac.com'),
-'Phoenix Comfort HVAC', 'phoenix-comfort-hvac',
-'Desert Cooling Experts',
-'Phoenix Comfort HVAC keeps Valley of the Sun residents cool and comfortable. We specialize in high-efficiency AC installations, heat pump systems, and evaporative cooler service. Our technicians understand the unique demands Arizona heat places on cooling equipment and can recommend the right solution.',
-'480-555-0144', 'service@phoenixhvac.com',
-(SELECT id FROM cities WHERE slug = 'phoenix' AND state_id = (SELECT id FROM states WHERE code = 'AZ')),
-(SELECT id FROM states WHERE code = 'AZ'),
-'85006', 'ROC-301234', 1, 1, 1, 0, 11, '6-10', 'pro', 4.60, 6, 'active'),
-
--- 45. Tucson Handyman Hub - Tucson, AZ
-((SELECT id FROM users WHERE email = 'adam.ramirez@tucsonhandyman.com'),
-'Tucson Handyman Hub', 'tucson-handyman-hub',
-'Reliable Repairs, Fair Prices',
-'Tucson Handyman Hub provides a full range of home repair and maintenance services to the Tucson metro area. From plumbing fixes and electrical troubleshooting to painting, tile work, and carpentry, we are your one-call solution for keeping your home in top shape.',
-'520-555-0145', 'book@tucsonhandyman.com',
-(SELECT id FROM cities WHERE slug = 'tucson' AND state_id = (SELECT id FROM states WHERE code = 'AZ')),
-(SELECT id FROM states WHERE code = 'AZ'),
-'85701', NULL, 0, 1, 0, 0, 5, '1', 'free', 3.90, 2, 'active'),
-
--- Washington cleaners (46-47)
-
--- 46. Emerald City Decks & Fencing - Seattle, WA
-((SELECT id FROM users WHERE email = 'eric.anderson@seattledecks.com'),
-'Emerald City Decks & Fencing', 'emerald-city-decks-and-fencing',
-'Rain-Ready Outdoor Structures',
-'Emerald City Decks & Fencing builds weather-resistant decks, fences, and pergolas designed for the Pacific Northwest climate. We use cedar, composite, and aluminum materials that stand up to Seattle rain. Our team also handles deck refinishing and fence repairs throughout King County.',
-'206-555-0146', 'build@seattledecks.com',
-(SELECT id FROM cities WHERE slug = 'seattle' AND state_id = (SELECT id FROM states WHERE code = 'WA')),
-(SELECT id FROM states WHERE code = 'WA'),
-'98101', 'SEATTL-L123456', 1, 1, 0, 0, 12, '6-10', 'basic', 4.50, 5, 'active'),
-
--- 47. Puget Sound Plumbing - Tacoma, WA
-((SELECT id FROM users WHERE email = 'tyler.wright@pugetsoundplumbing.com'),
-'Puget Sound Plumbing', 'puget-sound-plumbing',
-'Tacoma''s Trusted Plumbers',
-'Puget Sound Plumbing serves homeowners and businesses throughout the Tacoma and South Sound area. We handle sewer line repairs, water heater replacements, gas line installations, and bathroom plumbing remodels. Our flat-rate pricing means no surprise charges on your bill.',
-'253-555-0147', 'dispatch@pugetsoundplumbing.com',
-(SELECT id FROM cities WHERE slug = 'tacoma' AND state_id = (SELECT id FROM states WHERE code = 'WA')),
-(SELECT id FROM states WHERE code = 'WA'),
-'98402', 'PLUMB-WA-67890', 1, 1, 0, 0, 9, '6-10', 'free', 4.35, 3, 'active'),
-
--- Colorado cleaners (48-49)
-
--- 48. Mile High Roofing & Gutters - Denver, CO
-((SELECT id FROM users WHERE email = 'ben.foster@milehighroofing.com'),
-'Mile High Roofing & Gutters', 'mile-high-roofing-and-gutters',
-'Denver''s Complete Exterior Solution',
-'Mile High Roofing & Gutters handles all your exterior needs from the roofline down. We install asphalt shingles, metal roofing, seamless gutters, and gutter guards designed for heavy snowfall. Our hail damage specialists work directly with your insurance company to simplify the claims process.',
-'303-555-0148', 'info@milehighroofing.com',
-(SELECT id FROM cities WHERE slug = 'denver' AND state_id = (SELECT id FROM states WHERE code = 'CO')),
-(SELECT id FROM states WHERE code = 'CO'),
-'80202', 'CO-RC-234567', 1, 1, 1, 1, 15, '11-25', 'pro', 4.70, 7, 'active'),
-
--- 49. Denver Insulation & Energy - Denver, CO
-((SELECT id FROM users WHERE email = 'luke.ward@denverinsulation.com'),
-'Denver Insulation & Energy', 'denver-insulation-and-energy',
-'Lower Bills, Greater Comfort',
-'Denver Insulation & Energy helps Colorado homeowners reduce energy costs with professional insulation services. We install spray foam, blown-in fiberglass, and mineral wool insulation in attics, walls, and crawl spaces. We also offer home energy audits and air sealing services.',
-'720-555-0149', 'info@denverinsulation.com',
-(SELECT id FROM cities WHERE slug = 'denver' AND state_id = (SELECT id FROM states WHERE code = 'CO')),
-(SELECT id FROM states WHERE code = 'CO'),
-'80204', 'CO-IN-345678', 1, 1, 0, 0, 8, '2-5', 'free', 4.25, 3, 'active'),
-
--- New Jersey (50)
-
--- 50. Garden State Painting - Newark, NJ
-((SELECT id FROM users WHERE email = 'sam.diaz@gardenstatepainting.com'),
-'Garden State Painting', 'garden-state-painting',
-'North Jersey''s Painting Professionals',
-'Garden State Painting provides residential and commercial painting services across Northern New Jersey. We specialize in interior repaints, exterior house painting, cabinet refinishing, and deck staining. Our crews are clean, efficient, and committed to delivering a flawless finish every time.',
-'201-555-0150', 'quotes@gardenstatepainting.com',
-(SELECT id FROM cities WHERE slug = 'newark' AND state_id = (SELECT id FROM states WHERE code = 'NJ')),
-(SELECT id FROM states WHERE code = 'NJ'),
-'07102', 'NJ-HIC-13PA09876', 1, 1, 0, 0, 10, '6-10', 'free', 4.40, 4, 'active'),
-
--- Virginia (51)
-
--- 51. Virginia Coast Builders - Virginia Beach, VA
-((SELECT id FROM users WHERE email = 'craig.reed@virginiabuilders.com'),
-'Virginia Coast Builders', 'virginia-coast-builders',
-'Hampton Roads'' Trusted GC',
-'Virginia Coast Builders is a general contracting firm serving Hampton Roads and the Virginia Beach area. We manage residential construction, commercial tenant improvements, and military housing renovations. Our attention to detail and clear communication has earned us an A+ BBB rating.',
-'757-555-0151', 'info@virginiabuilders.com',
-(SELECT id FROM cities WHERE slug = 'virginia-beach' AND state_id = (SELECT id FROM states WHERE code = 'VA')),
-(SELECT id FROM states WHERE code = 'VA'),
-'23451', 'VA-CBC-2201234', 1, 1, 1, 0, 20, '11-25', 'basic', 4.60, 5, 'active'),
-
--- Massachusetts (52)
-
--- 52. Boston Bath Remodeling - Boston, MA
-((SELECT id FROM users WHERE email = 'ian.burke@bostonbathremodel.com'),
-'Boston Bath Remodeling', 'boston-bath-remodeling',
-'New England Bathroom Specialists',
-'Boston Bath Remodeling transforms Boston-area bathrooms with expert craftsmanship and top-quality materials. We specialize in tub-to-shower conversions, custom tile showers, vanity installations, and complete bathroom gut renovations. We work in homes of all styles from historic Victorians to modern condos.',
-'617-555-0152', 'info@bostonbathremodel.com',
-(SELECT id FROM cities WHERE slug = 'boston' AND state_id = (SELECT id FROM states WHERE code = 'MA')),
-(SELECT id FROM states WHERE code = 'MA'),
-'02108', 'MA-HIC-176543', 1, 1, 0, 0, 11, '6-10', 'free', 4.45, 4, 'active');
+-- FL cleaners (1-10)
+(2, 'Sparkle Home Cleaning', 'sparkle-home-cleaning', 'Making homes sparkle since 2015', 'Professional house cleaning and deep cleaning services in Miami-Dade County. Our trained team uses premium products to leave your home spotless. Weekly, bi-weekly, and one-time cleaning packages available.', '305-555-0201', 'info@sparklehomecleaning.com', 'https://sparklehomecleaning.com', '2847 NW 7th Ave, Miami, FL', NULL, 10, '33127', 25.7990, -80.2110, 'FL-CLN-10234', 1, 1, 1, 1, 9, '8-15', 'premium', 4.87, 3, 1245, 89, 'active', '2024-03-15 10:00:00'),
 
+(3, 'Miami Maid Service', 'miami-maid-service', 'Your trusted Miami cleaning team', 'Full-service residential cleaning company specializing in house cleaning and move-in/move-out services. Licensed and insured with background-checked employees. Serving all of Miami-Dade.', '305-555-0202', 'info@miamimaidservice.com', 'https://miamimaidservice.com', '1540 Brickell Ave, Miami, FL', NULL, 10, '33129', 25.7580, -80.1920, 'FL-CLN-10567', 1, 1, 1, 1, 7, '5-10', 'pro', 4.73, 3, 980, 67, 'active', '2024-05-20 09:00:00'),
+
+(4, 'Florida Fresh Clean', 'florida-fresh-clean', 'Eco-friendly cleaning for Florida homes', 'Green cleaning service using only plant-based, non-toxic products. Safe for kids, pets, and the environment. Residential cleaning throughout Palm Beach County.', '561-555-0203', 'info@floridafreshclean.com', 'https://floridafreshclean.com', '320 S County Rd, Palm Beach, FL', NULL, 10, '33480', 26.7056, -80.0364, 'FL-CLN-10890', 1, 1, 1, 0, 5, '3-5', 'basic', 4.60, 3, 520, 34, 'active', '2024-08-10 11:00:00'),
+
+(5, 'Sunshine Deep Clean Co.', 'sunshine-deep-clean', 'Deep cleaning specialists in South Florida', 'Intensive deep cleaning for homes and offices in Fort Lauderdale and surrounding areas. We tackle every surface, appliance, and hidden corner. Perfect for spring cleaning or pre-event prep.', '954-555-0204', 'info@sunshinedeepclean.com', 'https://sunshinedeepclean.com', '901 SE 17th St, Fort Lauderdale, FL', NULL, 10, '33316', 26.0998, -80.1240, 'FL-CLN-11023', 1, 1, 1, 0, 6, '5-10', 'pro', 4.80, 3, 710, 52, 'active', '2024-06-05 10:30:00'),
+
+(6, 'Gulf Coast Commercial Cleaning', 'gulf-coast-commercial-cleaning', 'Tampa Bay commercial cleaning experts', 'Full-service commercial and office cleaning company serving Tampa Bay businesses. Daily, weekly, or monthly contracts available. Floor care, restroom sanitization, and common area maintenance.', '813-555-0205', 'info@gulfcoastcommercial.com', 'https://gulfcoastcommercial.com', '4220 W Boy Scout Blvd, Tampa, FL', NULL, 10, '33607', 27.9525, -82.5080, 'FL-CLN-11456', 1, 1, 1, 1, 12, '15-30', 'premium', 4.90, 3, 890, 78, 'active', '2024-02-28 08:00:00'),
+
+(7, 'Tampa Bay Carpet Pros', 'tampa-bay-carpet-pros', 'Professional carpet and upholstery care', 'Expert carpet cleaning with truck-mounted steam extraction. We also handle upholstery, area rugs, and pet stain removal. Serving Tampa, St. Pete, and Clearwater.', '813-555-0206', 'info@tampacarpetpros.com', 'https://tampacarpetpros.com', '5628 E Hillsborough Ave, Tampa, FL', NULL, 10, '33610', 27.9889, -82.3890, 'FL-CLN-11789', 1, 1, 1, 0, 8, '3-5', 'basic', 4.53, 3, 445, 38, 'active', '2024-07-12 09:30:00'),
+
+(8, 'Orlando Pressure Wash', 'orlando-pressure-wash', 'Power washing Orlando driveways and homes', 'Professional pressure washing for driveways, sidewalks, pool decks, building exteriors, and roofs. Commercial and residential services throughout Central Florida.', '407-555-0207', 'info@orlandopressurewash.com', 'https://orlandopressurewash.com', '3900 S Orange Ave, Orlando, FL', NULL, 10, '32806', 28.5043, -81.3730, 'FL-CLN-12012', 1, 1, 1, 0, 10, '5-10', 'pro', 4.67, 3, 620, 45, 'active', '2024-04-18 10:00:00'),
+
+(9, 'Palm Beach Window Masters', 'palm-beach-window-masters', 'Crystal-clear windows guaranteed', 'Interior and exterior window cleaning for homes, condos, and commercial buildings in Palm Beach County. We also offer pressure washing and gutter cleaning. Licensed and insured.', '561-555-0208', 'info@pbwindowmasters.com', 'https://pbwindowmasters.com', '710 N Flagler Dr, West Palm Beach, FL', NULL, 10, '33401', 26.7210, -80.0530, 'FL-CLN-12345', 1, 1, 1, 0, 6, '3-5', 'basic', 4.47, 3, 380, 28, 'active', '2024-09-01 11:00:00'),
+
+(10, 'Fort Lauderdale Pool Care', 'fort-lauderdale-pool-care', 'Keeping Broward pools crystal clear', 'Weekly pool cleaning and maintenance in Broward County. Chemical balancing, skimming, vacuuming, filter cleaning, and equipment repair. Residential and commercial pools.', '954-555-0209', 'info@ftlpoolcare.com', 'https://ftlpoolcare.com', '2100 E Las Olas Blvd, Fort Lauderdale, FL', NULL, 10, '33301', 26.1180, -80.1290, 'FL-CLN-12678', 1, 1, 1, 0, 11, '5-10', 'pro', 4.70, 3, 550, 42, 'active', '2024-03-22 09:00:00'),
+
+(11, 'Jacksonville Janitorial', 'jacksonville-janitorial', 'Northeast Florida janitorial experts', 'Comprehensive janitorial and commercial cleaning services for offices, medical facilities, schools, and retail spaces in Jacksonville and Northeast Florida.', '904-555-0210', 'info@jaxjanitorial.com', 'https://jaxjanitorial.com', '1601 Prudential Dr, Jacksonville, FL', NULL, 10, '32207', 30.3180, -81.6410, 'FL-CLN-13001', 1, 1, 1, 0, 15, '30-50', 'premium', 4.83, 3, 670, 56, 'active', '2024-01-15 08:30:00'),
+
+-- CA cleaners (11-18 => cleaner IDs 11-18, user_ids 12-19)
+(12, 'LA Pristine Cleaning', 'la-pristine-cleaning', 'Los Angeles premium home cleaning', 'High-end residential cleaning in Los Angeles and Beverly Hills. Our uniformed, bonded teams deliver meticulous house cleaning and deep cleaning services tailored to luxury homes.', '310-555-0211', 'info@lapristinecleaning.com', 'https://lapristinecleaning.com', '9460 Wilshire Blvd, Beverly Hills, CA', NULL, 5, '90212', 34.0660, -118.3990, 'CA-CLN-20123', 1, 1, 1, 1, 8, '10-20', 'premium', 4.93, 3, 1320, 95, 'active', '2024-02-10 10:00:00'),
+
+(13, 'Bay Area Eco Clean', 'bay-area-eco-clean', 'San Francisco green cleaning leaders', 'Certified green cleaning service using only EWG-rated, plant-based products. Serving San Francisco, Oakland, and the entire Bay Area. Carbon-neutral operations.', '415-555-0212', 'info@bayareaecoclean.com', 'https://bayareaecoclean.com', '580 Market St, San Francisco, CA', NULL, 5, '94104', 37.7890, -122.4010, 'CA-CLN-20456', 1, 1, 1, 0, 6, '5-10', 'pro', 4.77, 3, 780, 58, 'active', '2024-06-15 09:00:00'),
+
+(14, 'SoCal Carpet & Tile', 'socal-carpet-tile', 'Southern California floor care experts', 'Professional carpet cleaning, tile and grout restoration, and natural stone care throughout San Diego and Orange County. Truck-mounted steam cleaning and hand-sealed grout.', '619-555-0213', 'info@socalcarpettile.com', 'https://socalcarpettile.com', '750 B St, San Diego, CA', NULL, 5, '92101', 32.7157, -117.1611, 'CA-CLN-20789', 1, 1, 1, 0, 9, '5-10', 'pro', 4.63, 3, 510, 40, 'active', '2024-04-20 10:30:00'),
+
+(15, 'Golden State Window Cleaning', 'golden-state-window-cleaning', 'Spotless windows across California', 'Residential and commercial window cleaning in the Greater Los Angeles area. High-rise, storefront, and post-construction window services. Fully insured with safety certifications.', '213-555-0214', 'info@goldenstatewindow.com', 'https://goldenstatewindow.com', '801 S Grand Ave, Los Angeles, CA', NULL, 5, '90017', 34.0470, -118.2600, 'CA-CLN-21012', 1, 1, 1, 0, 11, '8-15', 'pro', 4.57, 3, 430, 32, 'active', '2024-07-08 11:00:00'),
+
+(16, 'Sacramento Move Clean', 'sacramento-move-clean', 'Move-in/move-out cleaning specialists', 'Sacramento area specialists in move-in and move-out cleaning. We work with realtors, property managers, and tenants to ensure homes pass inspection. Deep cleaning included.', '916-555-0215', 'info@sacmoveclean.com', 'https://sacmoveclean.com', '1515 K St, Sacramento, CA', NULL, 5, '95814', 38.5816, -121.4944, 'CA-CLN-21345', 1, 1, 1, 0, 4, '3-5', 'basic', 4.50, 3, 340, 25, 'active', '2024-09-12 09:30:00'),
+
+(17, 'San Diego Office Clean', 'san-diego-office-clean', 'Professional office cleaning in San Diego', 'Daily and weekly office cleaning contracts for San Diego businesses. Restroom care, floor maintenance, trash removal, kitchen sanitization, and executive suite detailing.', '619-555-0216', 'info@sdofficeclean.com', 'https://sdofficeclean.com', '600 W Broadway, San Diego, CA', NULL, 5, '92101', 32.7194, -117.1666, 'CA-CLN-21678', 1, 1, 1, 0, 7, '10-20', 'pro', 4.70, 3, 490, 37, 'active', '2024-05-25 10:00:00'),
+
+(18, 'Malibu Vacation Clean', 'malibu-vacation-clean', 'Premium Airbnb turnover cleaning', 'Luxury vacation rental turnover cleaning in Malibu, Santa Monica, and the Westside. Same-day turnovers, linen service coordination, and restocking. Trusted by Superhosts.', '310-555-0217', 'info@malibuvacationclean.com', 'https://malibuvacationclean.com', '22775 Pacific Coast Hwy, Malibu, CA', NULL, 5, '90265', 34.0358, -118.6880, 'CA-CLN-22001', 1, 1, 1, 1, 5, '5-10', 'premium', 4.87, 3, 650, 48, 'active', '2024-03-30 11:00:00'),
+
+(19, 'Silicon Valley Janitorial', 'silicon-valley-janitorial', 'Tech office cleaning specialists', 'Janitorial and office cleaning for tech companies and startups in San Jose, Cupertino, and Mountain View. After-hours cleaning, server room maintenance, and green products.', '408-555-0218', 'info@svjanitorial.com', 'https://svjanitorial.com', '100 N Winchester Blvd, San Jose, CA', NULL, 5, '95128', 37.3230, -121.9470, 'CA-CLN-22234', 1, 1, 1, 0, 10, '20-50', 'premium', 4.80, 3, 570, 44, 'active', '2024-04-05 08:00:00'),
+
+-- TX cleaners (19-26 => cleaner IDs 19-26, user_ids 20-27)
+(20, 'Houston House Helpers', 'houston-house-helpers', 'Affordable house cleaning in Houston', 'Reliable and affordable house cleaning for Houston families. Weekly, bi-weekly, and monthly plans. We also specialize in move-in/move-out cleaning for apartments and homes.', '713-555-0219', 'info@houstonhousehelpers.com', 'https://houstonhousehelpers.com', '4500 Westheimer Rd, Houston, TX', NULL, 44, '77027', 29.7380, -95.4520, 'TX-CLN-30123', 1, 1, 1, 0, 6, '5-10', 'pro', 4.60, 3, 580, 43, 'active', '2024-05-10 10:00:00'),
+
+(21, 'Dallas Deep Clean Crew', 'dallas-deep-clean-crew', 'North Texas deep cleaning experts', 'Intensive deep cleaning services for homes and offices in Dallas-Fort Worth. We clean behind appliances, inside cabinets, ceiling fans, baseboards, and every forgotten corner.', '214-555-0220', 'info@dallasdeepclean.com', 'https://dallasdeepclean.com', '2020 Main St, Dallas, TX', NULL, 44, '75201', 32.7830, -96.7980, 'TX-CLN-30456', 1, 1, 1, 1, 8, '8-15', 'premium', 4.83, 3, 870, 64, 'active', '2024-03-18 09:00:00'),
+
+(22, 'Austin Eco Maids', 'austin-eco-maids', 'Austin green cleaning pioneers', 'Eco-friendly residential cleaning using certified green products. Serving Austin, Round Rock, and Cedar Park. Allergy-friendly, pet-safe, and environmentally responsible.', '512-555-0221', 'info@austinecomaids.com', 'https://austinecomaids.com', '1100 Congress Ave, Austin, TX', NULL, 44, '78701', 30.2720, -97.7430, 'TX-CLN-30789', 1, 1, 1, 0, 5, '3-5', 'basic', 4.67, 3, 460, 35, 'active', '2024-07-22 10:30:00'),
+
+(23, 'San Antonio Pressure Pros', 'san-antonio-pressure-pros', 'SA power washing specialists', 'Commercial and residential pressure washing in San Antonio. Driveways, parking lots, building exteriors, fleet washing, graffiti removal, and garage floor cleaning.', '210-555-0222', 'info@sapressurepros.com', 'https://sapressurepros.com', '300 E Commerce St, San Antonio, TX', NULL, 44, '78205', 29.4260, -98.4890, 'TX-CLN-31012', 1, 1, 1, 0, 9, '5-10', 'pro', 4.53, 3, 420, 30, 'active', '2024-06-14 09:30:00'),
+
+(24, 'DFW Commercial Services', 'dfw-commercial-services', 'Dallas-Fort Worth commercial cleaning', 'Full-service commercial cleaning and janitorial services for DFW businesses. Office buildings, retail spaces, warehouses, and multi-tenant properties. Day and night porter service.', '817-555-0223', 'info@dfwcommercial.com', 'https://dfwcommercial.com', '500 Throckmorton St, Fort Worth, TX', NULL, 44, '76102', 32.7490, -97.3310, 'TX-CLN-31345', 1, 1, 1, 1, 14, '30-50', 'premium', 4.90, 3, 920, 72, 'active', '2024-02-05 08:00:00'),
+
+(25, 'Texas Air Duct Specialists', 'texas-air-duct-specialists', 'HVAC and duct cleaning across Texas', 'Certified air duct, dryer vent, and HVAC cleaning for homes and businesses. Improve indoor air quality and reduce energy costs. NADCA-certified technicians. Serving DFW metro.', '214-555-0224', 'info@txairductpros.com', 'https://txairductpros.com', '3000 Pegasus Park Dr, Dallas, TX', NULL, 44, '75247', 32.8130, -96.8620, 'TX-CLN-31678', 1, 1, 1, 0, 7, '5-10', 'pro', 4.73, 3, 510, 39, 'active', '2024-08-01 10:00:00'),
+
+(26, 'Houston Restaurant Cleaning', 'houston-restaurant-cleaning', 'Keeping Houston kitchens spotless', 'Specialized restaurant and commercial kitchen cleaning including hood vents, grease traps, floor degreasing, and equipment sanitization. Health department compliant services.', '713-555-0225', 'info@houstonrestaurantclean.com', 'https://houstonrestaurantclean.com', '2400 Navigation Blvd, Houston, TX', NULL, 44, '77003', 29.7530, -95.3510, 'TX-CLN-32001', 1, 1, 1, 0, 11, '8-15', 'pro', 4.80, 3, 480, 36, 'active', '2024-04-12 09:00:00'),
+
+(27, 'Fort Worth Post-Construction', 'fort-worth-post-construction', 'Construction cleanup done right', 'Post-construction and renovation cleanup specialists in the Fort Worth area. Dust removal, debris hauling, window cleaning, floor polishing, and final detail clean for new builds and remodels.', '817-555-0226', 'info@fwpostconstruction.com', 'https://fwpostconstruction.com', '912 W Weatherford St, Fort Worth, TX', NULL, 44, '76102', 32.7580, -97.3340, 'TX-CLN-32234', 1, 1, 1, 0, 13, '10-20', 'pro', 4.70, 3, 390, 29, 'active', '2024-05-28 10:30:00'),
+
+-- NY cleaners (27-33 => cleaner IDs 27-33, user_ids 28-34)
+(28, 'NYC Spotless Cleaning', 'nyc-spotless-cleaning', 'Manhattan luxury home cleaning', 'Premium house cleaning and deep cleaning for Manhattan apartments, penthouses, and brownstones. Discreet, bonded teams with background checks. Weekly and bi-weekly service.', '212-555-0227', 'info@nycspotless.com', 'https://nycspotless.com', '350 5th Ave, New York, NY', NULL, 33, '10118', 40.7484, -73.9857, 'NY-CLN-40123', 1, 1, 1, 1, 10, '15-30', 'premium', 4.93, 3, 1450, 102, 'active', '2024-01-20 09:00:00'),
+
+(29, 'Manhattan Maid Co.', 'manhattan-maid-co', 'NYC move-in/move-out specialists', 'Trusted apartment cleaning and move-in/move-out services across all five boroughs. Real estate agent preferred vendor. Guaranteed to pass landlord inspection.', '212-555-0228', 'info@manhattanmaidco.com', 'https://manhattanmaidco.com', '420 Lexington Ave, New York, NY', NULL, 33, '10170', 40.7527, -73.9753, 'NY-CLN-40456', 1, 1, 1, 0, 8, '10-20', 'pro', 4.73, 3, 880, 65, 'active', '2024-04-08 10:00:00'),
+
+(30, 'Brooklyn Carpet Care', 'brooklyn-carpet-care', 'Brooklyn and Queens floor specialists', 'Carpet cleaning, upholstery care, and rug cleaning for Brooklyn and Queens residents. We handle Persian rugs, modern carpets, and all fabric types with care.', '718-555-0229', 'info@brooklyncarpetcare.com', 'https://brooklyncarpetcare.com', '150 Court St, Brooklyn, NY', NULL, 33, '11201', 40.6870, -73.9920, 'NY-CLN-40789', 1, 1, 1, 0, 7, '3-5', 'basic', 4.57, 3, 420, 31, 'active', '2024-06-20 11:00:00'),
+
+(31, 'Empire Window Cleaning', 'empire-window-cleaning', 'NYC high-rise window specialists', 'Licensed high-rise and commercial window cleaning across New York City. Scaffolding, rope access, and boom lift certified. Storefronts, office towers, and residential buildings.', '212-555-0230', 'info@empirewindowcleaning.com', 'https://empirewindowcleaning.com', '30 Rockefeller Plaza, New York, NY', NULL, 33, '10112', 40.7587, -73.9787, 'NY-CLN-41012', 1, 1, 1, 1, 18, '15-30', 'premium', 4.87, 3, 760, 55, 'active', '2024-02-14 08:30:00'),
+
+(32, 'Queens Office Maintenance', 'queens-office-maintenance', 'Office and janitorial services for Queens', 'Daily office cleaning and janitorial services for businesses in Queens, Long Island City, and Astoria. Evening and weekend shifts available. Green products upon request.', '718-555-0231', 'info@queensofficemaint.com', 'https://queensofficemaint.com', '28-17 Queens Plaza N, Long Island City, NY', NULL, 33, '11101', 40.7500, -73.9380, 'NY-CLN-41345', 1, 1, 1, 0, 9, '15-30', 'pro', 4.63, 3, 450, 33, 'active', '2024-07-15 09:30:00'),
+
+(33, 'Bronx Medical Clean', 'bronx-medical-clean', 'Healthcare-grade cleaning in NYC', 'Certified medical facility cleaning for clinics, dental offices, urgent care centers, and medical labs. OSHA-compliant protocols, EPA-registered disinfectants, and trained biohazard teams.', '718-555-0232', 'info@bronxmedicalclean.com', 'https://bronxmedicalclean.com', '1500 Grand Concourse, Bronx, NY', NULL, 33, '10457', 40.8370, -73.9200, 'NY-CLN-41678', 1, 1, 1, 0, 12, '10-20', 'pro', 4.80, 3, 520, 40, 'active', '2024-05-03 10:00:00'),
+
+(34, 'Long Island Pool & Patio', 'long-island-pool-patio', 'Long Island pool maintenance pros', 'Weekly pool cleaning, chemical maintenance, equipment repair, and patio pressure washing for Long Island homeowners. Seasonal openings and closings. Serving Nassau and Suffolk Counties.', '516-555-0233', 'info@lipoolpatio.com', 'https://lipoolpatio.com', '200 Old Country Rd, Mineola, NY', NULL, 33, '11501', 40.7470, -73.6400, 'NY-CLN-42001', 1, 1, 1, 0, 14, '5-10', 'pro', 4.67, 3, 380, 27, 'active', '2024-03-08 11:00:00'),
+
+-- IL cleaners (34-38 => cleaner IDs 34-38, user_ids 35-39)
+(35, 'Chicago Clean Team', 'chicago-clean-team', 'Windy City house cleaning experts', 'Professional house and deep cleaning services for Chicago homes and condos. Kitchens, bathrooms, bedrooms, and living spaces thoroughly cleaned. Licensed, bonded, and insured.', '312-555-0234', 'info@chicagocleanteam.com', 'https://chicagocleanteam.com', '233 S Wacker Dr, Chicago, IL', NULL, 14, '60606', 41.8788, -87.6359, 'IL-CLN-50123', 1, 1, 1, 1, 7, '8-15', 'premium', 4.83, 3, 920, 68, 'active', '2024-04-22 10:00:00'),
+
+(36, 'Windy City Upholstery', 'windy-city-upholstery', 'Chicago fabric and furniture care', 'Upholstery and carpet cleaning specialists in the Chicagoland area. Sofas, sectionals, dining chairs, mattresses, and auto interiors. Stain protection treatments available.', '312-555-0235', 'info@windycityupholstery.com', 'https://windycityupholstery.com', '1540 N Clark St, Chicago, IL', NULL, 14, '60610', 41.9100, -87.6310, 'IL-CLN-50456', 1, 1, 1, 0, 6, '3-5', 'basic', 4.50, 3, 340, 24, 'active', '2024-08-15 09:30:00'),
+
+(37, 'Springfield Tile Masters', 'springfield-tile-masters', 'Central Illinois tile restoration', 'Tile and grout cleaning, restoration, and sealing for kitchens, bathrooms, showers, and commercial floors. Serving Springfield and Central Illinois. Color sealing and grout repair.', '217-555-0236', 'info@springfieldtile.com', 'https://springfieldtile.com', '300 E Capitol Ave, Springfield, IL', NULL, 14, '62701', 39.7990, -89.6440, 'IL-CLN-50789', 1, 1, 1, 0, 8, '3-5', 'basic', 4.57, 3, 280, 20, 'active', '2024-09-05 10:30:00'),
+
+(38, 'Illinois Air Quality Pros', 'illinois-air-quality-pros', 'Chicagoland duct and vent cleaning', 'NADCA-certified air duct and dryer vent cleaning in Chicago and suburbs. Residential and commercial HVAC cleaning, sanitization, and indoor air quality testing.', '312-555-0237', 'info@ilairqualitypros.com', 'https://ilairqualitypros.com', '300 N LaSalle Dr, Chicago, IL', NULL, 14, '60654', 41.8880, -87.6320, 'IL-CLN-51012', 1, 1, 1, 0, 10, '5-10', 'pro', 4.73, 3, 470, 35, 'active', '2024-06-28 09:00:00'),
+
+(39, 'Chicago Restaurant Cleaners', 'chicago-restaurant-cleaners', 'Restaurant cleaning for the Windy City', 'Specialized restaurant, bar, and food service cleaning in Chicago. Kitchen deep cleaning, hood vent degreasing, floor care, and daily porter services. Health code compliant.', '312-555-0238', 'info@chirestaurantclean.com', 'https://chirestaurantclean.com', '180 N Michigan Ave, Chicago, IL', NULL, 14, '60601', 41.8850, -87.6240, 'IL-CLN-51345', 1, 1, 1, 0, 9, '10-20', 'pro', 4.67, 3, 410, 31, 'active', '2024-05-16 10:00:00'),
+
+-- GA cleaners (39-42 => cleaner IDs 39-42, user_ids 40-43)
+(40, 'Atlanta Fresh Cleaning', 'atlanta-fresh-cleaning', 'Atlanta residential cleaning you can trust', 'Dependable house and move-in/move-out cleaning in Metro Atlanta. Buckhead, Midtown, Decatur, and surrounding areas. Background-checked teams with a satisfaction guarantee.', '404-555-0239', 'info@atlantafreshclean.com', 'https://atlantafreshclean.com', '3340 Peachtree Rd NE, Atlanta, GA', NULL, 11, '30326', 33.8477, -84.3620, 'GA-CLN-60123', 1, 1, 1, 0, 5, '5-10', 'pro', 4.67, 3, 540, 40, 'active', '2024-06-10 10:00:00'),
+
+(41, 'Peach State Pressure Wash', 'peach-state-pressure-wash', 'Georgia power washing and cleanup', 'Pressure washing and post-construction cleanup for Atlanta and North Georgia. Driveways, decks, siding, commercial buildings, and new construction final clean.', '404-555-0240', 'info@peachstatepw.com', 'https://peachstatepw.com', '191 Peachtree St NE, Atlanta, GA', NULL, 11, '30303', 33.7590, -84.3870, 'GA-CLN-60456', 1, 1, 1, 0, 8, '5-10', 'pro', 4.60, 3, 380, 28, 'active', '2024-07-20 09:30:00'),
+
+(42, 'Georgia Medical Sanitizers', 'georgia-medical-sanitizers', 'Healthcare cleaning for GA facilities', 'Certified medical facility cleaning for hospitals, clinics, dental offices, and outpatient centers throughout Georgia. CDC-guided disinfection protocols and HIPAA-compliant service.', '678-555-0241', 'info@gamedicalclean.com', 'https://gamedicalclean.com', '550 Peachtree St NE, Atlanta, GA', NULL, 11, '30308', 33.7720, -84.3830, 'GA-CLN-60789', 1, 1, 1, 0, 11, '15-30', 'premium', 4.87, 3, 620, 47, 'active', '2024-03-25 08:00:00'),
+
+(43, 'Savannah Vacation Turnover', 'savannah-vacation-turnover', 'Savannah short-term rental cleaning', 'Airbnb and VRBO turnover cleaning in the Savannah Historic District and Tybee Island. Linen management, restocking, and quality inspection checklists for property managers.', '912-555-0242', 'info@savannahvacation.com', 'https://savannahvacation.com', '17 W McDonough St, Savannah, GA', NULL, 11, '31401', 32.0790, -81.0920, 'GA-CLN-61012', 1, 1, 1, 0, 4, '3-5', 'basic', 4.53, 3, 310, 22, 'active', '2024-08-05 11:00:00'),
+
+-- AZ cleaners (43-46 => cleaner IDs 43-46, user_ids 44-47)
+(44, 'Phoenix Tile & Grout Pros', 'phoenix-tile-grout-pros', 'Valley tile restoration specialists', 'Professional tile and grout cleaning, restoration, and sealing in Phoenix, Scottsdale, and Mesa. Saltillo, travertine, ceramic, and porcelain tile experts.', '602-555-0243', 'info@phxtilegrout.com', 'https://phxtilegrout.com', '2020 N Central Ave, Phoenix, AZ', NULL, 3, '85004', 33.4626, -112.0740, 'AZ-CLN-70123', 1, 1, 1, 0, 9, '5-10', 'pro', 4.70, 3, 490, 37, 'active', '2024-04-15 10:00:00'),
+
+(45, 'Scottsdale Hoarding Help', 'scottsdale-hoarding-help', 'Compassionate cleanout services', 'Sensitive hoarding cleanup, estate cleanouts, and deep cleaning for extreme situations. Trained, compassionate teams serving the greater Phoenix area. Discreet and non-judgmental.', '480-555-0244', 'info@scottsdalehoardinghelp.com', 'https://scottsdalehoardinghelp.com', '7000 E Mayo Blvd, Phoenix, AZ', NULL, 3, '85054', 33.6570, -111.9530, 'AZ-CLN-70456', 1, 1, 1, 0, 6, '3-5', 'pro', 4.80, 3, 340, 25, 'active', '2024-07-01 09:00:00'),
+
+(46, 'Tucson Pool Cleaning', 'tucson-pool-cleaning', 'Southern Arizona pool care', 'Weekly and bi-weekly pool cleaning, chemical balancing, and equipment maintenance in Tucson and Marana. Seasonal start-ups and green pool recovery. Licensed contractor.', '520-555-0245', 'info@tucsonpoolclean.com', 'https://tucsonpoolclean.com', '150 N Stone Ave, Tucson, AZ', NULL, 3, '85701', 32.2247, -110.9747, 'AZ-CLN-70789', 1, 1, 1, 0, 12, '3-5', 'basic', 4.47, 3, 300, 21, 'active', '2024-05-22 10:30:00'),
+
+(47, 'Arizona Desert Clean', 'arizona-desert-clean', 'Hoarding and construction cleanup AZ', 'Hoarding remediation and post-construction cleanup in the Phoenix metro area. Full cleanout, hazmat-certified technicians, deep sanitization, and property restoration services.', '602-555-0246', 'info@azdesertclean.com', 'https://azdesertclean.com', '3443 N Central Ave, Phoenix, AZ', NULL, 3, '85012', 33.4810, -112.0740, 'AZ-CLN-71012', 1, 1, 1, 0, 10, '5-10', 'pro', 4.63, 3, 360, 26, 'active', '2024-06-08 09:30:00'),
+
+-- CO cleaners (47-50 => cleaner IDs 47-50, user_ids 48-51)
+(48, 'Denver Green Maids', 'denver-green-maids', 'Denver eco-friendly home cleaning', 'Certified green residential cleaning using only non-toxic, plant-based products. Serving Denver, Lakewood, and Aurora. B-Corp certified with carbon offset programs.', '303-555-0247', 'info@denvergreenmaids.com', 'https://denvergreenmaids.com', '1600 California St, Denver, CO', NULL, 6, '80202', 39.7459, -104.9870, 'CO-CLN-80123', 1, 1, 1, 1, 6, '8-15', 'premium', 4.87, 3, 720, 53, 'active', '2024-03-12 10:00:00'),
+
+(49, 'Boulder Eco Clean', 'boulder-eco-clean', 'Boulder sustainable cleaning services', 'Environmentally conscious deep cleaning and regular house cleaning in Boulder and Broomfield. 100% biodegradable products, reusable supplies, and zero-waste practices.', '303-555-0248', 'info@boulderecoclean.com', 'https://boulderecoclean.com', '1942 Broadway, Boulder, CO', NULL, 6, '80302', 40.0190, -105.2750, 'CO-CLN-80456', 1, 1, 1, 0, 4, '3-5', 'basic', 4.60, 3, 350, 25, 'active', '2024-08-20 09:00:00'),
+
+(50, 'Colorado Springs Office Pro', 'colorado-springs-office-pro', 'COS commercial cleaning experts', 'Professional office and commercial cleaning for Colorado Springs businesses. USAA, Fort Carson, and Peterson AFB area. Day and evening cleaning schedules available.', '719-555-0249', 'info@csofficepro.com', 'https://csofficepro.com', '102 S Tejon St, Colorado Springs, CO', NULL, 6, '80903', 38.8317, -104.8253, 'CO-CLN-80789', 1, 1, 1, 0, 8, '10-20', 'pro', 4.70, 3, 440, 33, 'active', '2024-05-14 10:30:00'),
+
+(51, 'Aspen Vacation Clean', 'aspen-vacation-clean', 'Luxury vacation rental turnovers', 'Premium vacation rental cleaning for Aspen, Vail, and Breckenridge properties. Ski season and summer turnovers, luxury linen service, and property inspection. Trusted by top management companies.', '970-555-0250', 'info@aspenvacationclean.com', 'https://aspenvacationclean.com', '415 E Hyman Ave, Aspen, CO', NULL, 6, '81611', 39.1905, -106.8175, 'CO-CLN-81012', 1, 1, 1, 1, 7, '5-10', 'premium', 4.90, 3, 580, 43, 'active', '2024-04-02 11:00:00'),
+
+-- WA cleaners (51-53 => cleaner IDs 51-53, user_ids 52-54)
+(52, 'Seattle Clean Scene', 'seattle-clean-scene', 'Seattle eco home cleaning', 'Green residential cleaning in Seattle, Bellevue, and Kirkland. Non-toxic products safe for families and pets. Weekly, bi-weekly, and deep cleaning services.', '206-555-0251', 'info@seattlecleanscene.com', 'https://seattlecleanscene.com', '1501 4th Ave, Seattle, WA', NULL, 48, '98101', 47.6101, -122.3371, 'WA-CLN-90123', 1, 1, 1, 0, 5, '5-10', 'pro', 4.73, 3, 530, 39, 'active', '2024-06-18 10:00:00'),
+
+(53, 'Tacoma Industrial Clean', 'tacoma-industrial-clean', 'Warehouse and construction cleanup', 'Industrial cleaning, warehouse maintenance, and post-construction cleanup in Tacoma and South King County. Concrete floor polishing, equipment cleaning, and OSHA-compliant services.', '253-555-0252', 'info@tacomaindustrialclean.com', 'https://tacomaindustrialclean.com', '1120 Pacific Ave, Tacoma, WA', NULL, 48, '98402', 47.2529, -122.4443, 'WA-CLN-90456', 1, 1, 1, 0, 11, '10-20', 'pro', 4.60, 3, 370, 27, 'active', '2024-07-25 09:30:00'),
+
+(54, 'Olympia Restaurant Sanitizers', 'olympia-restaurant-sanitizers', 'Restaurant and medical cleaning WA', 'Restaurant kitchen cleaning and medical facility sanitization in Olympia and South Puget Sound. Hood vent degreasing, OSHA compliance, and healthcare-grade disinfection.', '360-555-0253', 'info@olympiarestaurantclean.com', 'https://olympiarestaurantclean.com', '119 Capitol Way N, Olympia, WA', NULL, 48, '98501', 47.0451, -122.9023, 'WA-CLN-90789', 1, 1, 1, 0, 8, '5-10', 'pro', 4.57, 3, 290, 20, 'active', '2024-08-10 10:00:00'),
+
+-- NV cleaners (54-56 => cleaner IDs 54-56, user_ids 55-57)
+(55, 'Las Vegas Strip Clean', 'las-vegas-strip-clean', 'Vegas vacation and restaurant cleaning', 'Vacation rental turnovers and restaurant cleaning on the Las Vegas Strip and surrounding areas. Fast same-day turnovers for Airbnb, condo-hotels, and food service establishments.', '702-555-0254', 'info@vegasstripclean.com', 'https://vegasstripclean.com', '3900 S Las Vegas Blvd, Las Vegas, NV', NULL, 29, '89119', 36.1033, -115.1744, 'NV-CLN-A0123', 1, 1, 1, 1, 6, '8-15', 'premium', 4.80, 3, 690, 51, 'active', '2024-03-20 09:00:00'),
+
+(56, 'Reno Air Duct Clean', 'reno-air-duct-clean', 'Northern Nevada indoor air quality', 'Air duct cleaning, dryer vent cleaning, and upholstery care in Reno, Sparks, and Carson City. NADCA-certified technicians. Residential and commercial HVAC systems.', '775-555-0255', 'info@renoairductclean.com', 'https://renoairductclean.com', '100 N Sierra St, Reno, NV', NULL, 29, '89501', 39.5261, -119.8126, 'NV-CLN-A0456', 1, 1, 1, 0, 9, '3-5', 'basic', 4.53, 3, 320, 23, 'active', '2024-07-05 10:30:00'),
+
+(57, 'Vegas Medical Clean Pro', 'vegas-medical-clean-pro', 'Healthcare cleaning in Las Vegas', 'Medical office and dental practice cleaning in Henderson and Las Vegas. EPA-registered hospital-grade disinfectants, OSHA-trained staff, and nightly cleaning schedules.', '702-555-0256', 'info@vegasmedicalclean.com', 'https://vegasmedicalclean.com', '2300 W Sahara Ave, Las Vegas, NV', NULL, 29, '89102', 36.1446, -115.1800, 'NV-CLN-A0789', 1, 1, 1, 0, 7, '5-10', 'pro', 4.67, 3, 410, 30, 'active', '2024-05-30 09:30:00'),
+
+-- NC cleaners (57-58 => cleaner IDs 57-58, user_ids 58-59)
+(58, 'Charlotte Move Clean Pro', 'charlotte-move-clean-pro', 'Charlotte move-in/out specialists', 'Move-in and move-out deep cleaning in Charlotte, Huntersville, and Concord. We work with property managers, realtors, and tenants. Walls, appliances, floors, and full sanitization.', '704-555-0257', 'info@charlottemoveclean.com', 'https://charlottemoveclean.com', '401 S Tryon St, Charlotte, NC', NULL, 34, '28202', 35.2222, -80.8451, 'NC-CLN-B0123', 1, 1, 1, 0, 5, '5-10', 'pro', 4.67, 3, 430, 32, 'active', '2024-06-22 10:00:00'),
+
+(59, 'Raleigh Hoarding Solutions', 'raleigh-hoarding-solutions', 'Triangle area hoarding remediation', 'Professional hoarding cleanup and estate cleanouts in the Raleigh-Durham area. Compassionate, licensed, and discreet. Sorting, organizing, hauling, and deep sanitization.', '919-555-0258', 'info@raleighhoarding.com', 'https://raleighhoarding.com', '150 Fayetteville St, Raleigh, NC', NULL, 34, '27601', 35.7796, -78.6382, 'NC-CLN-B0456', 1, 1, 1, 0, 7, '3-5', 'basic', 4.73, 3, 280, 19, 'active', '2024-08-28 09:00:00'),
+
+-- NJ cleaners (59-60 => cleaner IDs 59-60, user_ids 60-61)
+(60, 'Jersey Shore Window Clean', 'jersey-shore-window-clean', 'NJ coastal window and pressure washing', 'Window cleaning and pressure washing along the Jersey Shore and Central NJ. Oceanfront condos, storefronts, and residential homes. Salt spray removal specialists.', '201-555-0259', 'info@jerseywindowclean.com', 'https://jerseywindowclean.com', '700 Cookman Ave, Asbury Park, NJ', NULL, 31, '07712', 40.2206, -74.0021, 'NJ-CLN-C0123', 1, 1, 1, 0, 10, '5-10', 'pro', 4.60, 3, 350, 26, 'active', '2024-04-30 10:00:00'),
+
+(61, 'Newark Warehouse Clean', 'newark-warehouse-clean', 'NJ industrial and janitorial services', 'Warehouse, garage, and industrial space cleaning in Newark and North Jersey. Floor scrubbing, loading dock cleaning, janitorial contracts, and trash management.', '973-555-0260', 'info@newarkwarehouseclean.com', 'https://newarkwarehouseclean.com', '50 Park Pl, Newark, NJ', NULL, 31, '07102', 40.7363, -74.1724, 'NJ-CLN-C0456', 1, 1, 1, 0, 13, '10-20', 'pro', 4.53, 3, 310, 22, 'active', '2024-05-18 09:30:00');
 
 -- ============================================================
--- CLEANER CATEGORIES (link cleaners to categories)
--- Each cleaner gets 1-3 categories
+-- CLEANER CATEGORIES (many-to-many assignments)
+-- Each category has 3+ cleaners
+-- cat: 1=House, 2=Commercial, 3=Carpet, 4=Pressure, 5=Window,
+--      6=MoveInOut, 7=Deep, 8=Office, 9=PostConstruction, 10=Pool,
+--      11=Janitorial, 12=Upholstery, 13=AirDuct, 14=TileGrout,
+--      15=Hoarding, 16=GreenEco, 17=VacationRental, 18=Restaurant,
+--      19=Medical, 20=GarageWarehouse
 -- ============================================================
 INSERT INTO `cleaner_categories` (`cleaner_id`, `category_id`) VALUES
-
--- 1. Sunshine Roofing Co. -> Roofing, Gutters
-((SELECT id FROM cleaners WHERE slug = 'sunshine-roofing-co'), 1),
-((SELECT id FROM cleaners WHERE slug = 'sunshine-roofing-co'), 13),
-
--- 2. Metro Plumbing Solutions -> Plumbing
-((SELECT id FROM cleaners WHERE slug = 'metro-plumbing-solutions'), 6),
-
--- 3. Coastal Kitchen & Bath -> Kitchen Remodeling, Bathroom Remodeling, Home Remodeling
-((SELECT id FROM cleaners WHERE slug = 'coastal-kitchen-and-bath'), 9),
-((SELECT id FROM cleaners WHERE slug = 'coastal-kitchen-and-bath'), 5),
-((SELECT id FROM cleaners WHERE slug = 'coastal-kitchen-and-bath'), 15),
-
--- 4. Florida Comfort HVAC -> HVAC
-((SELECT id FROM cleaners WHERE slug = 'florida-comfort-hvac'), 4),
-
--- 5. Palm City Electrical -> Electrical
-((SELECT id FROM cleaners WHERE slug = 'palm-city-electrical'), 12),
-
--- 6. Tampa Bay Bath Remodeling -> Bathroom Remodeling, Plumbing
-((SELECT id FROM cleaners WHERE slug = 'tampa-bay-bath-remodeling'), 5),
-((SELECT id FROM cleaners WHERE slug = 'tampa-bay-bath-remodeling'), 6),
-
--- 7. First Coast General Contracting -> General Cleaner, Home Remodeling, Home Renovation
-((SELECT id FROM cleaners WHERE slug = 'first-coast-general-contracting'), 2),
-((SELECT id FROM cleaners WHERE slug = 'first-coast-general-contracting'), 15),
-((SELECT id FROM cleaners WHERE slug = 'first-coast-general-contracting'), 18),
-
--- 8. Bay Area Roofing Pros -> Roofing, Siding
-((SELECT id FROM cleaners WHERE slug = 'bay-area-roofing-pros'), 1),
-((SELECT id FROM cleaners WHERE slug = 'bay-area-roofing-pros'), 10),
-
--- 9. Pacific Plumbing & Drain -> Plumbing, Bathroom Remodeling
-((SELECT id FROM cleaners WHERE slug = 'pacific-plumbing-and-drain'), 6),
-((SELECT id FROM cleaners WHERE slug = 'pacific-plumbing-and-drain'), 5),
-
--- 10. SoCal Pro Painting -> Painting
-((SELECT id FROM cleaners WHERE slug = 'socal-pro-painting'), 14),
-
--- 11. Golden State HVAC -> HVAC, Insulation
-((SELECT id FROM cleaners WHERE slug = 'golden-state-hvac'), 4),
-((SELECT id FROM cleaners WHERE slug = 'golden-state-hvac'), 17),
-
--- 12. LA Decks & Outdoor Living -> Decks & Patios, Fencing
-((SELECT id FROM cleaners WHERE slug = 'la-decks-and-outdoor-living'), 8),
-((SELECT id FROM cleaners WHERE slug = 'la-decks-and-outdoor-living'), 11),
-
--- 13. SF Tile & Flooring -> Flooring, Kitchen Remodeling
-((SELECT id FROM cleaners WHERE slug = 'sf-tile-and-flooring'), 16),
-((SELECT id FROM cleaners WHERE slug = 'sf-tile-and-flooring'), 9),
-
--- 14. Sacramento Fence & Gate -> Fencing
-((SELECT id FROM cleaners WHERE slug = 'sacramento-fence-and-gate'), 11),
-
--- 15. Lone Star Roofing & Construction -> Roofing, General Cleaner
-((SELECT id FROM cleaners WHERE slug = 'lone-star-roofing-and-construction'), 1),
-((SELECT id FROM cleaners WHERE slug = 'lone-star-roofing-and-construction'), 2),
-
--- 16. Texas Handyman Services -> Handyman
-((SELECT id FROM cleaners WHERE slug = 'texas-handyman-services'), 3),
-
--- 17. Dallas Kitchen Design Studio -> Kitchen Remodeling, Home Remodeling
-((SELECT id FROM cleaners WHERE slug = 'dallas-kitchen-design-studio'), 9),
-((SELECT id FROM cleaners WHERE slug = 'dallas-kitchen-design-studio'), 15),
-
--- 18. Austin Home Renovations -> Home Renovation, Home Remodeling, General Cleaner
-((SELECT id FROM cleaners WHERE slug = 'austin-home-renovations'), 18),
-((SELECT id FROM cleaners WHERE slug = 'austin-home-renovations'), 15),
-((SELECT id FROM cleaners WHERE slug = 'austin-home-renovations'), 2),
-
--- 19. SA Town Electric -> Electrical
-((SELECT id FROM cleaners WHERE slug = 'sa-town-electric'), 12),
-
--- 20. Texas Concrete Works -> Concrete & Masonry, Decks & Patios
-((SELECT id FROM cleaners WHERE slug = 'texas-concrete-works'), 7),
-((SELECT id FROM cleaners WHERE slug = 'texas-concrete-works'), 8),
-
--- 21. Houston Siding Experts -> Siding, Gutters
-((SELECT id FROM cleaners WHERE slug = 'houston-siding-experts'), 10),
-((SELECT id FROM cleaners WHERE slug = 'houston-siding-experts'), 13),
-
--- 22. Empire State Roofing -> Roofing
-((SELECT id FROM cleaners WHERE slug = 'empire-state-roofing'), 1),
-
--- 23. NYC Master Plumbing -> Plumbing, Bathroom Remodeling
-((SELECT id FROM cleaners WHERE slug = 'nyc-master-plumbing'), 6),
-((SELECT id FROM cleaners WHERE slug = 'nyc-master-plumbing'), 5),
-
--- 24. Brooklyn Bath Design -> Bathroom Remodeling, Flooring
-((SELECT id FROM cleaners WHERE slug = 'brooklyn-bath-design'), 5),
-((SELECT id FROM cleaners WHERE slug = 'brooklyn-bath-design'), 16),
-
--- 25. Buffalo Insulation Pros -> Insulation
-((SELECT id FROM cleaners WHERE slug = 'buffalo-insulation-pros'), 17),
-
--- 26. Rochester Pro Painting -> Painting, Handyman
-((SELECT id FROM cleaners WHERE slug = 'rochester-pro-painting'), 14),
-((SELECT id FROM cleaners WHERE slug = 'rochester-pro-painting'), 3),
-
--- 27. Chicago Roofing Authority -> Roofing, Siding, Gutters
-((SELECT id FROM cleaners WHERE slug = 'chicago-roofing-authority'), 1),
-((SELECT id FROM cleaners WHERE slug = 'chicago-roofing-authority'), 10),
-((SELECT id FROM cleaners WHERE slug = 'chicago-roofing-authority'), 13),
-
--- 28. Windy City HVAC Services -> HVAC
-((SELECT id FROM cleaners WHERE slug = 'windy-city-hvac-services'), 4),
-
--- 29. Chicagoland Flooring Co. -> Flooring
-((SELECT id FROM cleaners WHERE slug = 'chicagoland-flooring-co'), 16),
-
--- 30. Aurora Handyman Connection -> Handyman, Painting
-((SELECT id FROM cleaners WHERE slug = 'aurora-handyman-connection'), 3),
-((SELECT id FROM cleaners WHERE slug = 'aurora-handyman-connection'), 14),
-
--- 31. Peachtree Builders Group -> General Cleaner, Home Renovation
-((SELECT id FROM cleaners WHERE slug = 'peachtree-builders-group'), 2),
-((SELECT id FROM cleaners WHERE slug = 'peachtree-builders-group'), 18),
-
--- 32. Atlanta Gutter Solutions -> Gutters
-((SELECT id FROM cleaners WHERE slug = 'atlanta-gutter-solutions'), 13),
-
--- 33. Savannah Garage Transformations -> Garage Renovation, Home Renovation
-((SELECT id FROM cleaners WHERE slug = 'savannah-garage-transformations'), 20),
-((SELECT id FROM cleaners WHERE slug = 'savannah-garage-transformations'), 18),
-
--- 34. Charlotte Home Remodeling -> Home Remodeling, Kitchen Remodeling, Bathroom Remodeling
-((SELECT id FROM cleaners WHERE slug = 'charlotte-home-remodeling'), 15),
-((SELECT id FROM cleaners WHERE slug = 'charlotte-home-remodeling'), 9),
-((SELECT id FROM cleaners WHERE slug = 'charlotte-home-remodeling'), 5),
-
--- 35. Raleigh Custom Decks -> Decks & Patios, Fencing
-((SELECT id FROM cleaners WHERE slug = 'raleigh-custom-decks'), 8),
-((SELECT id FROM cleaners WHERE slug = 'raleigh-custom-decks'), 11),
-
--- 36. Durham Basement Solutions -> Basement Finishing, Home Renovation
-((SELECT id FROM cleaners WHERE slug = 'durham-basement-solutions'), 19),
-((SELECT id FROM cleaners WHERE slug = 'durham-basement-solutions'), 18),
-
--- 37. Buckeye Roofing & Exteriors -> Roofing, Siding
-((SELECT id FROM cleaners WHERE slug = 'buckeye-roofing-and-exteriors'), 1),
-((SELECT id FROM cleaners WHERE slug = 'buckeye-roofing-and-exteriors'), 10),
-
--- 38. Cleveland Climate Control -> HVAC, Insulation
-((SELECT id FROM cleaners WHERE slug = 'cleveland-climate-control'), 4),
-((SELECT id FROM cleaners WHERE slug = 'cleveland-climate-control'), 17),
-
--- 39. Cincinnati Plumbing Co. -> Plumbing
-((SELECT id FROM cleaners WHERE slug = 'cincinnati-plumbing-co'), 6),
-
--- 40. Philly Home Renovations -> Home Renovation, Home Remodeling, General Cleaner
-((SELECT id FROM cleaners WHERE slug = 'philly-home-renovations'), 18),
-((SELECT id FROM cleaners WHERE slug = 'philly-home-renovations'), 15),
-((SELECT id FROM cleaners WHERE slug = 'philly-home-renovations'), 2),
-
--- 41. Pittsburgh Electric Solutions -> Electrical
-((SELECT id FROM cleaners WHERE slug = 'pittsburgh-electric-solutions'), 12),
-
--- 42. Keystone Concrete & Masonry -> Concrete & Masonry
-((SELECT id FROM cleaners WHERE slug = 'keystone-concrete-and-masonry'), 7),
-
--- 43. Desert Shield Roofing -> Roofing
-((SELECT id FROM cleaners WHERE slug = 'desert-shield-roofing'), 1),
-
--- 44. Phoenix Comfort HVAC -> HVAC
-((SELECT id FROM cleaners WHERE slug = 'phoenix-comfort-hvac'), 4),
-
--- 45. Tucson Handyman Hub -> Handyman, Painting, Electrical
-((SELECT id FROM cleaners WHERE slug = 'tucson-handyman-hub'), 3),
-((SELECT id FROM cleaners WHERE slug = 'tucson-handyman-hub'), 14),
-((SELECT id FROM cleaners WHERE slug = 'tucson-handyman-hub'), 12),
-
--- 46. Emerald City Decks & Fencing -> Decks & Patios, Fencing
-((SELECT id FROM cleaners WHERE slug = 'emerald-city-decks-and-fencing'), 8),
-((SELECT id FROM cleaners WHERE slug = 'emerald-city-decks-and-fencing'), 11),
-
--- 47. Puget Sound Plumbing -> Plumbing
-((SELECT id FROM cleaners WHERE slug = 'puget-sound-plumbing'), 6),
-
--- 48. Mile High Roofing & Gutters -> Roofing, Gutters
-((SELECT id FROM cleaners WHERE slug = 'mile-high-roofing-and-gutters'), 1),
-((SELECT id FROM cleaners WHERE slug = 'mile-high-roofing-and-gutters'), 13),
-
--- 49. Denver Insulation & Energy -> Insulation
-((SELECT id FROM cleaners WHERE slug = 'denver-insulation-and-energy'), 17),
-
--- 50. Garden State Painting -> Painting
-((SELECT id FROM cleaners WHERE slug = 'garden-state-painting'), 14),
-
--- 51. Virginia Coast Builders -> General Cleaner, Home Renovation
-((SELECT id FROM cleaners WHERE slug = 'virginia-coast-builders'), 2),
-((SELECT id FROM cleaners WHERE slug = 'virginia-coast-builders'), 18),
-
--- 52. Boston Bath Remodeling -> Bathroom Remodeling, Flooring
-((SELECT id FROM cleaners WHERE slug = 'boston-bath-remodeling'), 5),
-((SELECT id FROM cleaners WHERE slug = 'boston-bath-remodeling'), 16);
-
+-- Cat 1: House Cleaning (15 cleaners)
+(1,1),(2,1),(3,1),(4,1),(11,1),(12,1),(17,1),(19,1),(21,1),(27,1),(28,1),(34,1),(39,1),(47,1),(51,1),
+-- Cat 2: Commercial Cleaning (8)
+(5,2),(10,2),(16,2),(23,2),(25,2),(32,2),(41,2),(49,2),
+-- Cat 3: Carpet Cleaning (6)
+(6,3),(13,3),(20,3),(29,3),(35,3),(36,3),
+-- Cat 4: Pressure Washing (6)
+(7,4),(8,4),(22,4),(33,4),(40,4),(59,4),
+-- Cat 5: Window Cleaning (4)
+(8,5),(14,5),(30,5),(59,5),
+-- Cat 6: Move-In/Move-Out (7)
+(2,6),(15,6),(19,6),(28,6),(39,6),(50,6),(57,6),
+-- Cat 7: Deep Cleaning (10)
+(1,7),(4,7),(11,7),(15,7),(20,7),(27,7),(34,7),(44,7),(48,7),(57,7),
+-- Cat 8: Office Cleaning (5)
+(5,8),(16,8),(18,8),(31,8),(49,8),
+-- Cat 9: Post-Construction Cleanup (4)
+(26,9),(40,9),(46,9),(52,9),
+-- Cat 10: Pool Cleaning (3)
+(9,10),(33,10),(45,10),
+-- Cat 11: Janitorial Services (5)
+(10,11),(18,11),(23,11),(31,11),(60,11),
+-- Cat 12: Upholstery Cleaning (4)
+(6,12),(29,12),(35,12),(55,12),
+-- Cat 13: Air Duct Cleaning (3)
+(24,13),(37,13),(55,13),
+-- Cat 14: Tile & Grout Cleaning (3)
+(13,14),(36,14),(43,14),
+-- Cat 15: Hoarding Cleanup (3)
+(44,15),(46,15),(58,15),
+-- Cat 16: Green/Eco Cleaning (6)
+(3,16),(12,16),(21,16),(47,16),(48,16),(51,16),
+-- Cat 17: Vacation Rental Cleaning (4)
+(17,17),(42,17),(50,17),(54,17),
+-- Cat 18: Restaurant Cleaning (4)
+(25,18),(38,18),(53,18),(54,18),
+-- Cat 19: Medical Facility Cleaning (4)
+(32,19),(41,19),(53,19),(56,19),
+-- Cat 20: Garage & Warehouse Cleaning (5)
+(7,20),(22,20),(26,20),(52,20),(60,20);
 
 -- ============================================================
 -- CLEANER SPECIALTIES (2-4 per cleaner)
 -- ============================================================
 INSERT INTO `cleaner_specialties` (`cleaner_id`, `name`) VALUES
-
--- 1. Sunshine Roofing Co.
-((SELECT id FROM cleaners WHERE slug = 'sunshine-roofing-co'), 'Hurricane-Resistant Roofing'),
-((SELECT id FROM cleaners WHERE slug = 'sunshine-roofing-co'), 'Tile Roof Installation'),
-((SELECT id FROM cleaners WHERE slug = 'sunshine-roofing-co'), 'Storm Damage Repair'),
-((SELECT id FROM cleaners WHERE slug = 'sunshine-roofing-co'), 'Roof Inspections'),
-
--- 2. Metro Plumbing Solutions
-((SELECT id FROM cleaners WHERE slug = 'metro-plumbing-solutions'), 'Emergency Leak Repair'),
-((SELECT id FROM cleaners WHERE slug = 'metro-plumbing-solutions'), 'Water Heater Installation'),
-((SELECT id FROM cleaners WHERE slug = 'metro-plumbing-solutions'), 'Drain Cleaning'),
-
--- 3. Coastal Kitchen & Bath
-((SELECT id FROM cleaners WHERE slug = 'coastal-kitchen-and-bath'), 'Custom Cabinetry'),
-((SELECT id FROM cleaners WHERE slug = 'coastal-kitchen-and-bath'), 'Countertop Installation'),
-((SELECT id FROM cleaners WHERE slug = 'coastal-kitchen-and-bath'), 'Luxury Bath Design'),
-((SELECT id FROM cleaners WHERE slug = 'coastal-kitchen-and-bath'), 'Walk-In Showers'),
-
--- 4. Florida Comfort HVAC
-((SELECT id FROM cleaners WHERE slug = 'florida-comfort-hvac'), 'AC Installation'),
-((SELECT id FROM cleaners WHERE slug = 'florida-comfort-hvac'), 'Duct Cleaning'),
-((SELECT id FROM cleaners WHERE slug = 'florida-comfort-hvac'), 'Smart Thermostat Setup'),
-
--- 5. Palm City Electrical
-((SELECT id FROM cleaners WHERE slug = 'palm-city-electrical'), 'Panel Upgrades'),
-((SELECT id FROM cleaners WHERE slug = 'palm-city-electrical'), 'Whole-House Rewiring'),
-((SELECT id FROM cleaners WHERE slug = 'palm-city-electrical'), 'Generator Installation'),
-((SELECT id FROM cleaners WHERE slug = 'palm-city-electrical'), 'Smart Home Wiring'),
-
--- 6. Tampa Bay Bath Remodeling
-((SELECT id FROM cleaners WHERE slug = 'tampa-bay-bath-remodeling'), 'Walk-In Shower Conversion'),
-((SELECT id FROM cleaners WHERE slug = 'tampa-bay-bath-remodeling'), 'ADA-Accessible Remodels'),
-((SELECT id FROM cleaners WHERE slug = 'tampa-bay-bath-remodeling'), 'Custom Vanities'),
-
--- 7. First Coast General Contracting
-((SELECT id FROM cleaners WHERE slug = 'first-coast-general-contracting'), 'New Home Construction'),
-((SELECT id FROM cleaners WHERE slug = 'first-coast-general-contracting'), 'Room Additions'),
-((SELECT id FROM cleaners WHERE slug = 'first-coast-general-contracting'), 'Commercial Buildouts'),
-((SELECT id FROM cleaners WHERE slug = 'first-coast-general-contracting'), 'Project Management'),
-
--- 8. Bay Area Roofing Pros
-((SELECT id FROM cleaners WHERE slug = 'bay-area-roofing-pros'), 'Flat Roof Systems'),
-((SELECT id FROM cleaners WHERE slug = 'bay-area-roofing-pros'), 'Slate Roofing'),
-((SELECT id FROM cleaners WHERE slug = 'bay-area-roofing-pros'), 'Green Roof Installation'),
-
--- 9. Pacific Plumbing & Drain
-((SELECT id FROM cleaners WHERE slug = 'pacific-plumbing-and-drain'), 'Sewer Line Repair'),
-((SELECT id FROM cleaners WHERE slug = 'pacific-plumbing-and-drain'), 'Tankless Water Heaters'),
-((SELECT id FROM cleaners WHERE slug = 'pacific-plumbing-and-drain'), 'Whole-House Repiping'),
-((SELECT id FROM cleaners WHERE slug = 'pacific-plumbing-and-drain'), 'Hydro Jetting'),
-
--- 10. SoCal Pro Painting
-((SELECT id FROM cleaners WHERE slug = 'socal-pro-painting'), 'Interior Painting'),
-((SELECT id FROM cleaners WHERE slug = 'socal-pro-painting'), 'Exterior House Painting'),
-((SELECT id FROM cleaners WHERE slug = 'socal-pro-painting'), 'Cabinet Refinishing'),
-
--- 11. Golden State HVAC
-((SELECT id FROM cleaners WHERE slug = 'golden-state-hvac'), 'Ductless Mini-Splits'),
-((SELECT id FROM cleaners WHERE slug = 'golden-state-hvac'), 'High-Efficiency Systems'),
-((SELECT id FROM cleaners WHERE slug = 'golden-state-hvac'), 'Zoned Heating & Cooling'),
-
--- 12. LA Decks & Outdoor Living
-((SELECT id FROM cleaners WHERE slug = 'la-decks-and-outdoor-living'), 'Composite Decking'),
-((SELECT id FROM cleaners WHERE slug = 'la-decks-and-outdoor-living'), 'Pergolas & Arbors'),
-((SELECT id FROM cleaners WHERE slug = 'la-decks-and-outdoor-living'), 'Outdoor Kitchens'),
-
--- 13. SF Tile & Flooring
-((SELECT id FROM cleaners WHERE slug = 'sf-tile-and-flooring'), 'Hardwood Installation'),
-((SELECT id FROM cleaners WHERE slug = 'sf-tile-and-flooring'), 'Custom Tile Work'),
-((SELECT id FROM cleaners WHERE slug = 'sf-tile-and-flooring'), 'Luxury Vinyl Plank'),
-((SELECT id FROM cleaners WHERE slug = 'sf-tile-and-flooring'), 'Floor Refinishing'),
-
--- 14. Sacramento Fence & Gate
-((SELECT id FROM cleaners WHERE slug = 'sacramento-fence-and-gate'), 'Wood Privacy Fences'),
-((SELECT id FROM cleaners WHERE slug = 'sacramento-fence-and-gate'), 'Automated Gates'),
-
--- 15. Lone Star Roofing & Construction
-((SELECT id FROM cleaners WHERE slug = 'lone-star-roofing-and-construction'), 'Impact-Resistant Shingles'),
-((SELECT id FROM cleaners WHERE slug = 'lone-star-roofing-and-construction'), 'Metal Roofing'),
-((SELECT id FROM cleaners WHERE slug = 'lone-star-roofing-and-construction'), 'Insurance Claim Assistance'),
-
--- 16. Texas Handyman Services
-((SELECT id FROM cleaners WHERE slug = 'texas-handyman-services'), 'Drywall Repair'),
-((SELECT id FROM cleaners WHERE slug = 'texas-handyman-services'), 'Door & Window Installation'),
-((SELECT id FROM cleaners WHERE slug = 'texas-handyman-services'), 'Furniture Assembly'),
-
--- 17. Dallas Kitchen Design Studio
-((SELECT id FROM cleaners WHERE slug = 'dallas-kitchen-design-studio'), 'Custom Kitchen Cabinets'),
-((SELECT id FROM cleaners WHERE slug = 'dallas-kitchen-design-studio'), 'Quartz & Granite Countertops'),
-((SELECT id FROM cleaners WHERE slug = 'dallas-kitchen-design-studio'), '3D Kitchen Design'),
-((SELECT id FROM cleaners WHERE slug = 'dallas-kitchen-design-studio'), 'Appliance Installation'),
-
--- 18. Austin Home Renovations
-((SELECT id FROM cleaners WHERE slug = 'austin-home-renovations'), 'Whole-House Renovation'),
-((SELECT id FROM cleaners WHERE slug = 'austin-home-renovations'), 'Open-Concept Conversions'),
-((SELECT id FROM cleaners WHERE slug = 'austin-home-renovations'), 'ADU Construction'),
-
--- 19. SA Town Electric
-((SELECT id FROM cleaners WHERE slug = 'sa-town-electric'), 'EV Charger Installation'),
-((SELECT id FROM cleaners WHERE slug = 'sa-town-electric'), 'Lighting Design'),
-((SELECT id FROM cleaners WHERE slug = 'sa-town-electric'), 'Code Violation Repair'),
-
--- 20. Texas Concrete Works
-((SELECT id FROM cleaners WHERE slug = 'texas-concrete-works'), 'Stamped Concrete'),
-((SELECT id FROM cleaners WHERE slug = 'texas-concrete-works'), 'Driveway Pouring'),
-((SELECT id FROM cleaners WHERE slug = 'texas-concrete-works'), 'Retaining Walls'),
-((SELECT id FROM cleaners WHERE slug = 'texas-concrete-works'), 'Pool Decks'),
-
--- 21. Houston Siding Experts
-((SELECT id FROM cleaners WHERE slug = 'houston-siding-experts'), 'James Hardie Siding'),
-((SELECT id FROM cleaners WHERE slug = 'houston-siding-experts'), 'Vinyl Siding'),
-((SELECT id FROM cleaners WHERE slug = 'houston-siding-experts'), 'Soffit & Fascia'),
-
--- 22. Empire State Roofing
-((SELECT id FROM cleaners WHERE slug = 'empire-state-roofing'), 'TPO Flat Roofing'),
-((SELECT id FROM cleaners WHERE slug = 'empire-state-roofing'), 'EPDM Systems'),
-((SELECT id FROM cleaners WHERE slug = 'empire-state-roofing'), 'Landmark Building Roofing'),
-
--- 23. NYC Master Plumbing
-((SELECT id FROM cleaners WHERE slug = 'nyc-master-plumbing'), 'Boiler Repair'),
-((SELECT id FROM cleaners WHERE slug = 'nyc-master-plumbing'), 'Backflow Prevention'),
-((SELECT id FROM cleaners WHERE slug = 'nyc-master-plumbing'), 'Gas Line Installation'),
-
--- 24. Brooklyn Bath Design
-((SELECT id FROM cleaners WHERE slug = 'brooklyn-bath-design'), 'Custom Tile Showers'),
-((SELECT id FROM cleaners WHERE slug = 'brooklyn-bath-design'), 'Frameless Glass Enclosures'),
-((SELECT id FROM cleaners WHERE slug = 'brooklyn-bath-design'), 'Heated Flooring'),
-
--- 25. Buffalo Insulation Pros
-((SELECT id FROM cleaners WHERE slug = 'buffalo-insulation-pros'), 'Spray Foam Insulation'),
-((SELECT id FROM cleaners WHERE slug = 'buffalo-insulation-pros'), 'Blown-In Cellulose'),
-((SELECT id FROM cleaners WHERE slug = 'buffalo-insulation-pros'), 'Energy Audits'),
-
--- 26. Rochester Pro Painting
-((SELECT id FROM cleaners WHERE slug = 'rochester-pro-painting'), 'Interior Repainting'),
-((SELECT id FROM cleaners WHERE slug = 'rochester-pro-painting'), 'Exterior Painting'),
-
--- 27. Chicago Roofing Authority
-((SELECT id FROM cleaners WHERE slug = 'chicago-roofing-authority'), 'Architectural Shingles'),
-((SELECT id FROM cleaners WHERE slug = 'chicago-roofing-authority'), 'Standing Seam Metal'),
-((SELECT id FROM cleaners WHERE slug = 'chicago-roofing-authority'), 'Ice Dam Prevention'),
-
--- 28. Windy City HVAC Services
-((SELECT id FROM cleaners WHERE slug = 'windy-city-hvac-services'), 'Furnace Installation'),
-((SELECT id FROM cleaners WHERE slug = 'windy-city-hvac-services'), 'Boiler Systems'),
-((SELECT id FROM cleaners WHERE slug = 'windy-city-hvac-services'), 'Preventive Maintenance Plans'),
-
--- 29. Chicagoland Flooring Co.
-((SELECT id FROM cleaners WHERE slug = 'chicagoland-flooring-co'), 'Hardwood Refinishing'),
-((SELECT id FROM cleaners WHERE slug = 'chicagoland-flooring-co'), 'Engineered Wood Flooring'),
-((SELECT id FROM cleaners WHERE slug = 'chicagoland-flooring-co'), 'Carpet Installation'),
-
--- 30. Aurora Handyman Connection
-((SELECT id FROM cleaners WHERE slug = 'aurora-handyman-connection'), 'Deck Staining'),
-((SELECT id FROM cleaners WHERE slug = 'aurora-handyman-connection'), 'Gutter Cleaning'),
-((SELECT id FROM cleaners WHERE slug = 'aurora-handyman-connection'), 'Appliance Installation'),
-
--- 31. Peachtree Builders Group
-((SELECT id FROM cleaners WHERE slug = 'peachtree-builders-group'), 'New Home Construction'),
-((SELECT id FROM cleaners WHERE slug = 'peachtree-builders-group'), 'Major Renovations'),
-((SELECT id FROM cleaners WHERE slug = 'peachtree-builders-group'), 'Commercial Buildouts'),
-((SELECT id FROM cleaners WHERE slug = 'peachtree-builders-group'), 'Design-Build Services'),
-
--- 32. Atlanta Gutter Solutions
-((SELECT id FROM cleaners WHERE slug = 'atlanta-gutter-solutions'), 'Seamless Aluminum Gutters'),
-((SELECT id FROM cleaners WHERE slug = 'atlanta-gutter-solutions'), 'Gutter Guard Installation'),
-
--- 33. Savannah Garage Transformations
-((SELECT id FROM cleaners WHERE slug = 'savannah-garage-transformations'), 'Garage Conversions'),
-((SELECT id FROM cleaners WHERE slug = 'savannah-garage-transformations'), 'Epoxy Floor Coating'),
-((SELECT id FROM cleaners WHERE slug = 'savannah-garage-transformations'), 'Custom Storage Systems'),
-
--- 34. Charlotte Home Remodeling
-((SELECT id FROM cleaners WHERE slug = 'charlotte-home-remodeling'), 'Kitchen Remodels'),
-((SELECT id FROM cleaners WHERE slug = 'charlotte-home-remodeling'), 'Bath Renovations'),
-((SELECT id FROM cleaners WHERE slug = 'charlotte-home-remodeling'), 'Room Additions'),
-((SELECT id FROM cleaners WHERE slug = 'charlotte-home-remodeling'), 'Design-Build'),
-
--- 35. Raleigh Custom Decks
-((SELECT id FROM cleaners WHERE slug = 'raleigh-custom-decks'), 'Trex Composite Decks'),
-((SELECT id FROM cleaners WHERE slug = 'raleigh-custom-decks'), 'Screened Porches'),
-((SELECT id FROM cleaners WHERE slug = 'raleigh-custom-decks'), 'Outdoor Kitchens'),
-
--- 36. Durham Basement Solutions
-((SELECT id FROM cleaners WHERE slug = 'durham-basement-solutions'), 'Basement Finishing'),
-((SELECT id FROM cleaners WHERE slug = 'durham-basement-solutions'), 'Waterproofing'),
-((SELECT id FROM cleaners WHERE slug = 'durham-basement-solutions'), 'Home Theater Rooms'),
-
--- 37. Buckeye Roofing & Exteriors
-((SELECT id FROM cleaners WHERE slug = 'buckeye-roofing-and-exteriors'), 'Owens Corning Shingles'),
-((SELECT id FROM cleaners WHERE slug = 'buckeye-roofing-and-exteriors'), 'Drone Roof Inspections'),
-((SELECT id FROM cleaners WHERE slug = 'buckeye-roofing-and-exteriors'), 'Window Replacement'),
-
--- 38. Cleveland Climate Control
-((SELECT id FROM cleaners WHERE slug = 'cleveland-climate-control'), 'High-Efficiency Furnaces'),
-((SELECT id FROM cleaners WHERE slug = 'cleveland-climate-control'), 'Central Air Conditioning'),
-((SELECT id FROM cleaners WHERE slug = 'cleveland-climate-control'), 'Ductwork Design'),
-
--- 39. Cincinnati Plumbing Co.
-((SELECT id FROM cleaners WHERE slug = 'cincinnati-plumbing-co'), 'Water Heater Repair'),
-((SELECT id FROM cleaners WHERE slug = 'cincinnati-plumbing-co'), 'Drain Unclogging'),
-((SELECT id FROM cleaners WHERE slug = 'cincinnati-plumbing-co'), 'Plumbing Renovations'),
-
--- 40. Philly Home Renovations
-((SELECT id FROM cleaners WHERE slug = 'philly-home-renovations'), 'Rowhome Renovations'),
-((SELECT id FROM cleaners WHERE slug = 'philly-home-renovations'), 'Historic Restoration'),
-((SELECT id FROM cleaners WHERE slug = 'philly-home-renovations'), 'Gut Renovations'),
-((SELECT id FROM cleaners WHERE slug = 'philly-home-renovations'), 'Structural Repairs'),
-
--- 41. Pittsburgh Electric Solutions
-((SELECT id FROM cleaners WHERE slug = 'pittsburgh-electric-solutions'), 'Electrical Panel Upgrades'),
-((SELECT id FROM cleaners WHERE slug = 'pittsburgh-electric-solutions'), 'Generator Hookups'),
-((SELECT id FROM cleaners WHERE slug = 'pittsburgh-electric-solutions'), 'LED Lighting Retrofits'),
-
--- 42. Keystone Concrete & Masonry
-((SELECT id FROM cleaners WHERE slug = 'keystone-concrete-and-masonry'), 'Foundation Work'),
-((SELECT id FROM cleaners WHERE slug = 'keystone-concrete-and-masonry'), 'Brick & Stone Veneer'),
-((SELECT id FROM cleaners WHERE slug = 'keystone-concrete-and-masonry'), 'Stamped Concrete Patios'),
-
--- 43. Desert Shield Roofing
-((SELECT id FROM cleaners WHERE slug = 'desert-shield-roofing'), 'Tile Roofing'),
-((SELECT id FROM cleaners WHERE slug = 'desert-shield-roofing'), 'Foam Roofing'),
-((SELECT id FROM cleaners WHERE slug = 'desert-shield-roofing'), 'Cool Roof Coatings'),
-
--- 44. Phoenix Comfort HVAC
-((SELECT id FROM cleaners WHERE slug = 'phoenix-comfort-hvac'), 'High-SEER AC Systems'),
-((SELECT id FROM cleaners WHERE slug = 'phoenix-comfort-hvac'), 'Heat Pump Installation'),
-((SELECT id FROM cleaners WHERE slug = 'phoenix-comfort-hvac'), 'Evaporative Coolers'),
-
--- 45. Tucson Handyman Hub
-((SELECT id FROM cleaners WHERE slug = 'tucson-handyman-hub'), 'General Home Repairs'),
-((SELECT id FROM cleaners WHERE slug = 'tucson-handyman-hub'), 'Painting & Touch-Ups'),
-
--- 46. Emerald City Decks & Fencing
-((SELECT id FROM cleaners WHERE slug = 'emerald-city-decks-and-fencing'), 'Cedar Decking'),
-((SELECT id FROM cleaners WHERE slug = 'emerald-city-decks-and-fencing'), 'Composite Fencing'),
-((SELECT id FROM cleaners WHERE slug = 'emerald-city-decks-and-fencing'), 'Pergola Construction'),
-
--- 47. Puget Sound Plumbing
-((SELECT id FROM cleaners WHERE slug = 'puget-sound-plumbing'), 'Sewer Repair'),
-((SELECT id FROM cleaners WHERE slug = 'puget-sound-plumbing'), 'Gas Line Installation'),
-((SELECT id FROM cleaners WHERE slug = 'puget-sound-plumbing'), 'Bathroom Plumbing'),
-
--- 48. Mile High Roofing & Gutters
-((SELECT id FROM cleaners WHERE slug = 'mile-high-roofing-and-gutters'), 'Hail Damage Repair'),
-((SELECT id FROM cleaners WHERE slug = 'mile-high-roofing-and-gutters'), 'Metal Roofing'),
-((SELECT id FROM cleaners WHERE slug = 'mile-high-roofing-and-gutters'), 'Gutter Guard Systems'),
-
--- 49. Denver Insulation & Energy
-((SELECT id FROM cleaners WHERE slug = 'denver-insulation-and-energy'), 'Spray Foam Insulation'),
-((SELECT id FROM cleaners WHERE slug = 'denver-insulation-and-energy'), 'Blown-In Fiberglass'),
-((SELECT id FROM cleaners WHERE slug = 'denver-insulation-and-energy'), 'Home Energy Audits'),
-((SELECT id FROM cleaners WHERE slug = 'denver-insulation-and-energy'), 'Air Sealing'),
-
--- 50. Garden State Painting
-((SELECT id FROM cleaners WHERE slug = 'garden-state-painting'), 'Interior Painting'),
-((SELECT id FROM cleaners WHERE slug = 'garden-state-painting'), 'Exterior Painting'),
-((SELECT id FROM cleaners WHERE slug = 'garden-state-painting'), 'Deck Staining'),
-
--- 51. Virginia Coast Builders
-((SELECT id FROM cleaners WHERE slug = 'virginia-coast-builders'), 'Residential Construction'),
-((SELECT id FROM cleaners WHERE slug = 'virginia-coast-builders'), 'Commercial Improvements'),
-((SELECT id FROM cleaners WHERE slug = 'virginia-coast-builders'), 'Military Housing'),
-
--- 52. Boston Bath Remodeling
-((SELECT id FROM cleaners WHERE slug = 'boston-bath-remodeling'), 'Tub-to-Shower Conversions'),
-((SELECT id FROM cleaners WHERE slug = 'boston-bath-remodeling'), 'Custom Tile Showers'),
-((SELECT id FROM cleaners WHERE slug = 'boston-bath-remodeling'), 'Vanity Installation'),
-((SELECT id FROM cleaners WHERE slug = 'boston-bath-remodeling'), 'Historic Home Bathrooms');
+-- Cleaner 1
+(1, 'Weekly House Cleaning'), (1, 'Bi-Weekly Maintenance'), (1, 'Spring Cleaning'),
+-- Cleaner 2
+(2, 'Move-Out Deep Clean'), (2, 'Apartment Cleaning'), (2, 'Real Estate Showing Prep'),
+-- Cleaner 3
+(3, 'Non-Toxic Cleaning'), (3, 'Pet-Safe Products'), (3, 'Allergy-Friendly Service'),
+-- Cleaner 4
+(4, 'Intensive Deep Cleaning'), (4, 'Appliance Interior Cleaning'), (4, 'Pre-Party Cleaning'),
+-- Cleaner 5
+(5, 'Office Building Cleaning'), (5, 'Retail Store Cleaning'), (5, 'Day Porter Service'),
+-- Cleaner 6
+(6, 'Steam Carpet Cleaning'), (6, 'Pet Stain Removal'), (6, 'Area Rug Cleaning'),
+-- Cleaner 7
+(7, 'Driveway Pressure Washing'), (7, 'Roof Soft Washing'), (7, 'Concrete Cleaning'),
+-- Cleaner 8
+(8, 'High-Rise Window Cleaning'), (8, 'Storefront Windows'), (8, 'Pressure Washing'),
+-- Cleaner 9
+(9, 'Chemical Balancing'), (9, 'Filter Maintenance'), (9, 'Green Pool Recovery'),
+-- Cleaner 10
+(10, 'Nightly Janitorial'), (10, 'Floor Stripping & Waxing'), (10, 'Restroom Sanitization'),
+-- Cleaner 11
+(11, 'Luxury Home Cleaning'), (11, 'Penthouse Service'), (11, 'Same-Day Booking'),
+-- Cleaner 12
+(12, 'Green Product Only'), (12, 'Carbon Neutral Service'), (12, 'EWG-Rated Products'),
+-- Cleaner 13
+(13, 'Tile Restoration'), (13, 'Natural Stone Care'), (13, 'Grout Color Sealing'),
+-- Cleaner 14
+(14, 'Commercial Window Cleaning'), (14, 'Post-Construction Windows'), (14, 'Safety Certified'),
+-- Cleaner 15
+(15, 'Apartment Turnover'), (15, 'Realtor Partnerships'), (15, 'Inspection Guarantee'),
+-- Cleaner 16
+(16, 'Daily Office Cleaning'), (16, 'After-Hours Service'), (16, 'Kitchen Sanitization'),
+-- Cleaner 17
+(17, 'Airbnb Turnover'), (17, 'Linen Coordination'), (17, 'Guest-Ready Checklists'),
+-- Cleaner 18
+(18, 'Tech Office Specialist'), (18, 'Server Room Cleaning'), (18, 'Green Certified'),
+-- Cleaner 19
+(19, 'Affordable Packages'), (19, 'Monthly Plans'), (19, 'Move-In Cleaning'),
+-- Cleaner 20
+(20, 'Behind-Appliance Cleaning'), (20, 'Cabinet Interior Cleaning'), (20, 'Baseboard Detailing'),
+-- Cleaner 21
+(21, 'Certified Green Products'), (21, 'Pet-Friendly Cleaning'), (21, 'Zero-Waste Supplies'),
+-- Cleaner 22
+(22, 'Commercial Pressure Washing'), (22, 'Graffiti Removal'), (22, 'Fleet Washing'),
+-- Cleaner 23
+(23, 'Multi-Tenant Properties'), (23, 'Warehouse Cleaning'), (23, 'Day & Night Service'),
+-- Cleaner 24
+(24, 'NADCA Certified'), (24, 'Dryer Vent Cleaning'), (24, 'Indoor Air Testing'),
+-- Cleaner 25
+(25, 'Hood Vent Degreasing'), (25, 'Grease Trap Cleaning'), (25, 'Kitchen Equipment Sanitization'),
+-- Cleaner 26
+(26, 'New Construction Final Clean'), (26, 'Debris Removal'), (26, 'Floor Polishing'),
+-- Cleaner 27
+(27, 'Manhattan Apartments'), (27, 'Brownstone Cleaning'), (27, 'Penthouse Service'),
+-- Cleaner 28
+(28, 'All Five Boroughs'), (28, 'Landlord Inspection Ready'), (28, 'Same-Day Move-Out'),
+-- Cleaner 29
+(29, 'Persian Rug Specialist'), (29, 'Fabric Protection'), (29, 'Stain Removal Expert'),
+-- Cleaner 30
+(30, 'Rope Access Certified'), (30, 'Scaffolding Work'), (30, 'Storefront Windows'),
+-- Cleaner 31
+(31, 'Evening & Weekend Cleaning'), (31, 'Green Products Available'), (31, 'Multi-Floor Buildings'),
+-- Cleaner 32
+(32, 'OSHA Compliant'), (32, 'Biohazard Certified'), (32, 'EPA Disinfectants'),
+-- Cleaner 33
+(33, 'Pool Opening & Closing'), (33, 'Equipment Repair'), (33, 'Patio Pressure Washing'),
+-- Cleaner 34
+(34, 'Condo Cleaning'), (34, 'Kitchen & Bath Focus'), (34, 'Licensed & Bonded'),
+-- Cleaner 35
+(35, 'Sofa & Sectional Cleaning'), (35, 'Mattress Sanitization'), (35, 'Auto Interior Cleaning'),
+-- Cleaner 36
+(36, 'Shower Tile Restoration'), (36, 'Grout Repair'), (36, 'Color Sealing'),
+-- Cleaner 37
+(37, 'Residential HVAC Cleaning'), (37, 'Commercial Systems'), (37, 'Air Quality Testing'),
+-- Cleaner 38
+(38, 'Kitchen Deep Clean'), (38, 'Floor Degreasing'), (38, 'Health Code Compliance'),
+-- Cleaner 39
+(39, 'Buckhead Homes'), (39, 'Midtown Apartments'), (39, 'Move-Out Guarantee'),
+-- Cleaner 40
+(40, 'Building Exterior Washing'), (40, 'Construction Debris Cleanup'), (40, 'Deck Restoration'),
+-- Cleaner 41
+(41, 'CDC Protocol Cleaning'), (41, 'HIPAA Compliant'), (41, 'Hospital-Grade Disinfection'),
+-- Cleaner 42
+(42, 'Historic District Properties'), (42, 'Tybee Island Rentals'), (42, 'Linen Management'),
+-- Cleaner 43
+(43, 'Saltillo Tile Expert'), (43, 'Travertine Restoration'), (43, 'Outdoor Tile Cleaning'),
+-- Cleaner 44
+(44, 'Compassionate Approach'), (44, 'Estate Cleanouts'), (44, 'Extreme Cleaning'),
+-- Cleaner 45
+(45, 'Desert Climate Pool Care'), (45, 'Chemical-Free Options'), (45, 'Equipment Diagnostics'),
+-- Cleaner 46
+(46, 'Hazmat Certified'), (46, 'Property Restoration'), (46, 'Post-Renovation Cleanup'),
+-- Cleaner 47
+(47, 'B-Corp Certified'), (47, 'Carbon Offset Programs'), (47, 'Plant-Based Products'),
+-- Cleaner 48
+(48, 'Zero-Waste Cleaning'), (48, 'Biodegradable Products'), (48, 'Reusable Supplies'),
+-- Cleaner 49
+(49, 'Military Base Clearance'), (49, 'Day & Evening Shifts'), (49, 'Large Office Complexes'),
+-- Cleaner 50
+(50, 'Ski Season Turnovers'), (50, 'Luxury Linen Service'), (50, 'Property Inspections'),
+-- Cleaner 51
+(51, 'Pacific NW Green Cleaning'), (51, 'Rain-Season Deep Clean'), (51, 'Family-Safe Products'),
+-- Cleaner 52
+(52, 'Concrete Floor Polishing'), (52, 'Loading Dock Cleaning'), (52, 'OSHA Compliant'),
+-- Cleaner 53
+(53, 'Hood Vent Cleaning'), (53, 'Healthcare Sanitization'), (53, 'Food Safety Certified'),
+-- Cleaner 54
+(54, 'Same-Day Turnovers'), (54, 'Condo-Hotel Cleaning'), (54, 'Strip Restaurant Kitchens'),
+-- Cleaner 55
+(55, 'NADCA Certified Tech'), (55, 'Residential & Commercial'), (55, 'Furniture Cleaning'),
+-- Cleaner 56
+(56, 'Dental Practice Specialist'), (56, 'Nightly Medical Cleaning'), (56, 'OSHA-Trained Staff'),
+-- Cleaner 57
+(57, 'Realtor Preferred Vendor'), (57, 'Appliance Deep Clean'), (57, 'Wall Washing'),
+-- Cleaner 58
+(58, 'Sorting & Organizing'), (58, 'Junk Hauling'), (58, 'Deep Sanitization'),
+-- Cleaner 59
+(59, 'Oceanfront Properties'), (59, 'Salt Spray Removal'), (59, 'Gutter Cleaning'),
+-- Cleaner 60
+(60, 'Warehouse Floor Scrubbing'), (60, 'Trash Compactor Maintenance'), (60, 'Janitorial Contracts');
 
 SET FOREIGN_KEY_CHECKS = 1;
