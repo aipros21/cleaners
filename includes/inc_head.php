@@ -10,8 +10,8 @@ $r2_url = getenv('R2_PUBLIC_URL') ?: '';
 $ga_id = getenv('GOOGLE_ANALYTICS_ID') ?: 'G-796SX09N7Q';
 
 $_title = isset($page_title) ? htmlspecialchars($page_title) : "$site_name - Find Trusted Local Cleaners";
-$_desc = isset($page_description) ? htmlspecialchars($page_description) : 'Find top-rated local cleaners for roofing, plumbing, HVAC, remodeling, and more. Get free quotes from verified professionals near you.';
-$_keywords = isset($page_keywords) ? htmlspecialchars($page_keywords) : 'cleaners near me, find cleaners, home improvement, get quotes';
+$_desc = isset($page_description) ? htmlspecialchars($page_description) : 'Find top-rated local cleaning services for house cleaning, commercial cleaning, carpet cleaning, pressure washing, and more. Get free quotes from verified professionals near you.';
+$_keywords = isset($page_keywords) ? htmlspecialchars($page_keywords) : 'cleaning services near me, find cleaners, house cleaning, commercial cleaning, get quotes';
 $_canonical = isset($page_canonical) ? $site_url . $page_canonical : $site_url . $_SERVER['REQUEST_URI'];
 $_og_image = isset($page_og_image) ? $page_og_image : $site_url . '/images/og-default.jpg';
 $_og_type = isset($page_og_type) ? $page_og_type : 'website';
@@ -19,7 +19,7 @@ $_og_type = isset($page_og_type) ? $page_og_type : 'website';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="google-site-verification" content="vwWK2X18yiCgC-upQXG1z2aVT1_Jkb8E_s6itgPN38U">
+<meta name="google-site-verification" content="xVzFy84ulCsophOwE_PSMxgLhnoa_lY2qMgpeG_jaPY" />
 
 <title><?php echo $_title; ?></title>
 <meta name="description" content="<?php echo $_desc; ?>">
