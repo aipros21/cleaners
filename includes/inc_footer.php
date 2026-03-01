@@ -12,7 +12,7 @@
             <!-- About -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <h5 class="text-white mb-3">FindMyCleaner</h5>
-                <p class="text-muted small">Connecting homeowners with top-rated local cleaners since 2024. Find trusted professionals for any home improvement project.</p>
+                <p class="text-muted small">Connecting homeowners and businesses with top-rated local cleaning professionals since 2024. Find trusted cleaners for any job.</p>
                 <div class="social-links mt-3 d-flex align-items-center">
                     <a href="#" class="text-muted mr-3" aria-label="Facebook"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
                     <a href="#" class="text-muted mr-3" aria-label="X (Twitter)"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
@@ -25,13 +25,13 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <h5 class="text-white mb-3">Popular Services</h5>
                 <ul class="list-unstyled small">
-                    <li class="mb-2"><a href="/cleaners/roofing" class="text-muted">Roofing</a></li>
-                    <li class="mb-2"><a href="/cleaners/general-cleaner" class="text-muted">General Cleaner</a></li>
-                    <li class="mb-2"><a href="/cleaners/plumbing" class="text-muted">Plumbing</a></li>
-                    <li class="mb-2"><a href="/cleaners/hvac" class="text-muted">HVAC</a></li>
-                    <li class="mb-2"><a href="/cleaners/electrical" class="text-muted">Electrical</a></li>
-                    <li class="mb-2"><a href="/cleaners/kitchen-remodeling" class="text-muted">Kitchen Remodeling</a></li>
-                    <li class="mb-2"><a href="/cleaners/bathroom-remodeling" class="text-muted">Bathroom Remodeling</a></li>
+                    <li class="mb-2"><a href="/cleaners/house-cleaning" class="text-muted">House Cleaning</a></li>
+                    <li class="mb-2"><a href="/cleaners/commercial-cleaning" class="text-muted">Commercial Cleaning</a></li>
+                    <li class="mb-2"><a href="/cleaners/carpet-cleaning" class="text-muted">Carpet Cleaning</a></li>
+                    <li class="mb-2"><a href="/cleaners/pressure-washing" class="text-muted">Pressure Washing</a></li>
+                    <li class="mb-2"><a href="/cleaners/window-cleaning" class="text-muted">Window Cleaning</a></li>
+                    <li class="mb-2"><a href="/cleaners/deep-cleaning" class="text-muted">Deep Cleaning</a></li>
+                    <li class="mb-2"><a href="/cleaners/office-cleaning" class="text-muted">Office Cleaning</a></li>
                 </ul>
             </div>
 
@@ -52,8 +52,8 @@
 
             <!-- Newsletter -->
             <div class="col-lg-3 col-md-6 mb-4">
-                <h5 class="text-white mb-3">Get Home Tips</h5>
-                <p class="text-muted small">Subscribe for home improvement tips, cleaner guides, and exclusive deals.</p>
+                <h5 class="text-white mb-3">Cleaning Tips</h5>
+                <p class="text-muted small">Subscribe for cleaning tips, guides, and exclusive deals.</p>
                 <form class="newsletter-form" id="newsletterForm">
                     <div class="input-group">
                         <label for="newsletter_email" class="sr-only">Email address</label>
