@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /includes/
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /sql/
+
+Sitemap: https://cleaners-247.com/sitemap.xml

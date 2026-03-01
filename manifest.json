@@ -1,0 +1,26 @@
+{
+    "name": "FindMyContractor",
+    "short_name": "FindMyContractor",
+    "description": "Find trusted local contractors near you",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#1B2838",
+    "icons": [
+        {
+            "src": "/images/favicon.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/favicon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/favicon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

@@ -1,0 +1,245 @@
+/* ==========================================
+   ADMIN PANEL STYLES
+   Extends dashboard.css patterns
+   ========================================== */
+
+.admin-body {
+    background-color: #f0f2f5;
+    padding-top: 56px;
+}
+
+/* Reuse dashboard layout */
+.admin-body .dashboard-sidebar {
+    background: #0d1b2a;
+}
+
+.admin-body .sidebar-link.active {
+    background: rgba(21,101,192,0.2);
+    border-left-color: #42A5F5;
+}
+
+/* ==========================================
+   KPI CARDS
+   ========================================== */
+.kpi-card {
+    border: none;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    background: #fff;
+}
+
+.kpi-card .kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0D47A1;
+}
+
+.kpi-card .kpi-label {
+    font-size: 13px;
+    color: #757575;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kpi-card .kpi-icon {
+    font-size: 36px;
+    color: #1565C0;
+    opacity: 0.3;
+}
+
+.kpi-card .kpi-change {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.kpi-change.up { color: #28a745; }
+.kpi-change.down { color: #dc3545; }
+
+/* ==========================================
+   DATA TABLES
+   ========================================== */
+.admin-table {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.admin-table .table {
+    margin-bottom: 0;
+}
+
+.admin-table .table th {
+    background: #f8f9fa;
+    border-top: none;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #757575;
+    font-weight: 600;
+    padding: 12px 15px;
+}
+
+.admin-table .table td {
+    padding: 12px 15px;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.admin-table .table tbody tr:hover {
+    background-color: #f0f7ff;
+}
+
+/* ==========================================
+   FILTERS BAR
+   ========================================== */
+.filters-bar {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+.filters-bar .form-control,
+.filters-bar .btn {
+    font-size: 13px;
+}
+
+/* ==========================================
+   STATUS BADGES
+   ========================================== */
+.badge-active { background-color: #28a745; color: #fff; }
+.badge-pending { background-color: #ffc107; color: #333; }
+.badge-suspended { background-color: #dc3545; color: #fff; }
+.badge-draft { background-color: #6c757d; color: #fff; }
+.badge-published { background-color: #28a745; color: #fff; }
+.badge-approved { background-color: #28a745; color: #fff; }
+.badge-rejected { background-color: #dc3545; color: #fff; }
+
+/* ==========================================
+   CHARTS
+   ========================================== */
+.chart-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+.chart-card h6 {
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* ==========================================
+   ACTION BUTTONS
+   ========================================== */
+.action-btns .btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.action-btns .btn + .btn {
+    margin-left: 4px;
+}
+
+/* ==========================================
+   SETTINGS
+   ========================================== */
+.settings-group {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+.settings-group h5 {
+    color: #0D47A1;
+    border-bottom: 2px solid #e3f2fd;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.setting-row label {
+    width: 200px;
+    font-weight: 500;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 0;
+}
+
+.setting-row .form-control {
+    flex: 1;
+    font-size: 13px;
+}
+
+/* ==========================================
+   ACTIVITY LOG
+   ========================================== */
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.activity-item .activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e3f2fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.activity-item .activity-icon i {
+    color: #1565C0;
+    font-size: 14px;
+}
+
+.activity-item .activity-text {
+    font-size: 14px;
+}
+
+.activity-item .activity-time {
+    font-size: 12px;
+    color: #999;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 991px) {
+    .dashboard-sidebar {
+        transform: translateX(-100%);
+    }
+    .dashboard-sidebar.show {
+        transform: translateX(0);
+    }
+    .dashboard-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    .setting-row {
+        flex-direction: column;
+    }
+    .setting-row label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}

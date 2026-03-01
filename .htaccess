@@ -1,0 +1,159 @@
+RewriteEngine On
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Remove www
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# Remove trailing slashes (except root /)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteRule ^ %1 [R=301,L]
+
+# Dynamic sitemap (before static file check so it overrides sitemap.xml)
+RewriteRule ^sitemap\.xml$ /sitemap-generator.php [L]
+
+# Don't rewrite actual files or directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ==========================================
+# CLEAN URL REWRITES
+# ==========================================
+
+# Admin (must be before state landing to avoid /admin/cleaners matching as state)
+RewriteRule ^admin/?$ /admin/index.php [L,NC,QSA]
+RewriteRule ^admin/([a-z-]+)/?$ /admin/$1.php [L,NC,QSA]
+
+# Dashboard (cleaner) (must be before state landing)
+RewriteRule ^dashboard/?$ /dashboard/index.php [L,NC,QSA]
+RewriteRule ^dashboard/([a-z-]+)/?$ /dashboard/$1.php [L,NC,QSA]
+
+# Homepage
+RewriteRule ^home/?$ /index.php [L,NC,QSA]
+
+# State landing pages: /florida/cleaners/
+RewriteRule ^([a-z-]+)/cleaners/?$ /state-landing.php?state_slug=$1 [L,NC,QSA]
+
+# Cleaner directory: /cleaners/
+RewriteRule ^cleaners/?$ /cleaners.php [L,NC,QSA]
+
+# Cleaner directory by category: /cleaners/roofing/
+RewriteRule ^cleaners/([a-z0-9-]+)/?$ /cleaners.php?category=$1 [L,NC,QSA]
+
+# Cleaner directory by category + state: /cleaners/roofing/florida/
+RewriteRule ^cleaners/([a-z0-9-]+)/([a-z-]+)/?$ /cleaners.php?category=$1&state=$2 [L,NC,QSA]
+
+# Cleaner directory by category + city-state: /cleaners/roofing/miami-fl/
+RewriteRule ^cleaners/([a-z0-9-]+)/([a-z-]+)-([a-z]{2})/?$ /cleaners.php?category=$1&city=$2&state_code=$3 [L,NC,QSA]
+
+# Cleaner profile: /cleaner/joes-roofing/
+RewriteRule ^cleaner/([a-z0-9-]+)/?$ /cleaner-profile.php?slug=$1 [L,NC,QSA]
+
+# Get quotes
+RewriteRule ^get-quotes/?$ /get-quotes.php [L,NC,QSA]
+RewriteRule ^get-quotes/([a-z0-9-]+)/?$ /get-quotes.php?category=$1 [L,NC,QSA]
+
+# Blog
+RewriteRule ^blog/?$ /blog.php [L,NC,QSA]
+RewriteRule ^blog/([a-z0-9-]+)/?$ /blog-single.php?slug=$1 [L,NC,QSA]
+
+# Auth pages
+RewriteRule ^login/?$ /login.php [L,NC,QSA]
+RewriteRule ^join/?$ /join.php [L,NC,QSA]
+RewriteRule ^register/?$ /register.php [L,NC,QSA]
+RewriteRule ^forgot-password/?$ /forgot-password.php [L,NC,QSA]
+RewriteRule ^reset-password/?$ /reset-password.php [L,NC,QSA]
+
+# Static pages
+RewriteRule ^about/?$ /about.php [L,NC,QSA]
+RewriteRule ^contact/?$ /contact.php [L,NC,QSA]
+RewriteRule ^pricing/?$ /pricing.php [L,NC,QSA]
+RewriteRule ^privacy-policy/?$ /privacy-policy.php [L,NC,QSA]
+RewriteRule ^terms/?$ /terms.php [L,NC,QSA]
+RewriteRule ^search/?$ /search.php [L,NC,QSA]
+RewriteRule ^faq/?$ /faq.php [L,NC,QSA]
+
+
+# ==========================================
+# SECURITY
+# ==========================================
+
+# Block access to sensitive files
+<FilesMatch "\.(env|sql|sh|bak|log|ini|conf)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to includes directory
+RewriteRule ^includes/ - [F,L]
+
+# Block access to .git
+RewriteRule ^\.git - [F,L]
+
+# ==========================================
+# SECURITY HEADERS
+# ==========================================
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header set Permissions-Policy "geolocation=(self), microphone=()"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; frame-src https://www.google.com; connect-src 'self' https://www.google.com https://www.google-analytics.com;"
+
+    # Cache-Control headers
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "max-age=31536000, public, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    <FilesMatch "\.(woff|woff2|ttf|eot)$">
+        Header set Cache-Control "max-age=31536000, public, immutable"
+    </FilesMatch>
+</IfModule>
+
+# ==========================================
+# CACHING
+# ==========================================
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-font-woff "access plus 1 year"
+    ExpiresByType application/x-font-woff2 "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# ==========================================
+# COMPRESSION
+# ==========================================
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE application/xml text/xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE application/x-font-woff
+</IfModule>
+
+# ==========================================
+# ERROR PAGES
+# ==========================================
+
+ErrorDocument 403 /403.php
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php
